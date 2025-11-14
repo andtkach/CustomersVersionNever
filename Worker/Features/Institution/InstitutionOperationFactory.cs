@@ -15,7 +15,8 @@ public class InstitutionOperationFactory : IInstitutionOperationFactory
         {
             { "Create", () => new CreateInstitutionOperation(_cacheService) },
             { "Update", () => new UpdateInstitutionOperation(_cacheService) },
-            { "Delete", () => new DeleteInstitutionOperation(_cacheService) }
+            { "Delete", () => new DeleteInstitutionOperation(_cacheService) },
+            { "Patch", () => new PatchInstitutionOperation(_cacheService) },
         };
     }
 
