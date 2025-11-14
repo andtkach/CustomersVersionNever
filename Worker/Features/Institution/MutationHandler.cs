@@ -3,6 +3,7 @@ using Common.Model;
 using Common.Requests;
 using Microsoft.Extensions.Caching.Hybrid;
 using System.Text.Json;
+using Worker.Cache;
 using Worker.Data;
 
 namespace Worker.Features.Institution;
@@ -43,7 +44,7 @@ internal static class MutationHandler
                 };
 
                 await backendDataContext.Institutions.AddAsync(newInstitution);
-                await CacheInstitution(newInstitution, hybridCache);
+                await CacheHelper.CacheInstitution(newInstitution, hybridCache);
             }
             else if (intent.Action == "Update")
             {
@@ -63,7 +64,7 @@ internal static class MutationHandler
                 existingInstitution.Name = payload.Name;
                 existingInstitution.Description = payload.Description;
                 
-                await CacheInstitution(existingInstitution, hybridCache);
+                await CacheHelper.CacheInstitution(existingInstitution, hybridCache);
             }
             else if (intent.Action == "Delete")
             {
@@ -82,7 +83,7 @@ internal static class MutationHandler
 
                 backendDataContext.Institutions.Remove(existingInstitution);
                 
-                await ClearInstitution(existingInstitution.Id, hybridCache);
+                await CacheHelper.ClearInstitution(existingInstitution.Id, hybridCache);
             }
             else
             {
@@ -105,18 +106,5 @@ internal static class MutationHandler
         }
     }
 
-    private static async Task CacheInstitution(Data.Institution institution, HybridCache cache)
-    {
-        var cacheKey = $"institution-{institution.Id}";
-        await cache.SetAsync(
-            cacheKey,
-            JsonSerializer.SerializeToUtf8Bytes(institution),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(1) });
-    }
-
-    private static async Task ClearInstitution(Guid institutionId, HybridCache cache)
-    {
-        var cacheKey = $"institution-{institutionId}";
-        await cache.RemoveAsync(cacheKey);
-    }
+    
 }
