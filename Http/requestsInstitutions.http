@@ -1,0 +1,48 @@
+// Institution
+
+// Create institution
+POST https://localhost:20011/institutions
+Content-Type: application/json
+
+{
+    "name": "Institution1",
+    "description": "Demo institution 1"
+}
+
+###
+
+// Get institution
+GET https://localhost:20011/institutions/id
+
+###
+
+// Get institutions
+GET https://localhost:20011/institutions
+
+
+###
+
+// update institution
+PUT https://localhost:20011/institutions/019a8332-5df8-7e86-a609-eb14d67475b0
+Content-Type: application/json
+
+{
+    "name": "Institution1 updated",
+    "description": "Demo institution 1 updated"
+}
+
+###
+
+// patch institution
+PATCH https://localhost:20011/institutions/id
+Content-Type: application/json
+
+{
+    "name": "Institution1 patched"
+}
+###
+
+// delete institution
+DELETE https://localhost:20011/institutions/019A8332-5DF8-7E86-A609-EB14D67475B0
+
+###

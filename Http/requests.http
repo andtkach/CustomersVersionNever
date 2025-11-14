@@ -1,0 +1,22 @@
+// Create a new note
+
+POST https://localhost:20011/notes-sync
+Content-Type: application/json
+
+{
+    "title": "My new note",
+    "content": "This is the content of my new note."
+}
+
+###
+
+POST https://localhost:20011/notes-async
+Content-Type: application/json
+
+{
+    "title": "My new note",
+    "content": "This is the content of my new note."
+}
+
+###
+
