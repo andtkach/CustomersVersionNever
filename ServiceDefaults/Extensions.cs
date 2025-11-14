@@ -33,7 +33,7 @@ public static class Extensions
             options.DefaultEntryOptions = new Microsoft.Extensions.Caching.Hybrid.HybridCacheEntryOptions
             {
                 Expiration = TimeSpan.FromMinutes(10),
-                LocalCacheExpiration = TimeSpan.FromMinutes(5)
+                LocalCacheExpiration = TimeSpan.FromMinutes(10)
             };
         });
         

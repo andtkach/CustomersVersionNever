@@ -1,7 +1,3 @@
-using Aspire.Hosting;
-using Projects;
-using System.Diagnostics;
-
 const string aspireServiceBusName = "ServiceBus";
 const string institutionsQueueName = "Institutions";
 const string aspireDatabaseServer = "Database";
@@ -14,7 +10,6 @@ var builder = DistributedApplication.CreateBuilder(args);
 var serviceBus = builder.AddAzureServiceBus(aspireServiceBusName)
     .RunAsEmulator(c => c.WithLifetime(ContainerLifetime.Persistent));
 
-serviceBus.AddServiceBusQueue("notes");
 serviceBus.AddServiceBusQueue(institutionsQueueName);
 
 var sqlPassword = builder.AddParameter("sql-password", secret: true, value: "sql-password-2025!?");

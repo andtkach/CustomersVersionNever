@@ -1,5 +1,5 @@
-﻿using Tags.Api.Features.AnalyzeNote;
-using Tags.Api.Features.GetTagsByNote;
+﻿using Worker.Features.Institution.GetInstitution;
+using Worker.Features.Institution.GetInstitutions;
 
 namespace Worker.Features;
 
@@ -7,8 +7,8 @@ public static class WorkerEndpoints
 {
     public static IEndpointRouteBuilder MapTagsEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("tags/analyze", AnalyzeNoteEndpoint.AnalyzeNote);
-        app.MapGet("tags/note/{noteId:guid}", GetTagsByNoteEndpoint.GetTagsByNote);
+        app.MapGet("institutions/{id:guid}", GetInstitutionEndpoint.GetInstitutionAsync);
+        app.MapGet("institutions", GetInstitutionsEndpoint.GetInstitutionsAsync);
 
         return app;
     }

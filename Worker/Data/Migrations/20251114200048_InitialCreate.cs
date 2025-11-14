@@ -23,26 +23,6 @@ namespace Worker.Data.Migrations
                 {
                     table.PrimaryKey("PK_Institutions", x => x.Id);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "Tags",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Color = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
-                    NoteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tags", x => x.Id);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tags_NoteId",
-                table: "Tags",
-                column: "NoteId");
         }
 
         /// <inheritdoc />
@@ -50,9 +30,6 @@ namespace Worker.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Institutions");
-
-            migrationBuilder.DropTable(
-                name: "Tags");
         }
     }
 }

@@ -27,21 +27,6 @@ namespace Api.Data.Migrations
                 {
                     table.PrimaryKey("PK_Intents", x => x.Id);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "Notes",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Notes", x => x.Id);
-                });
         }
 
         /// <inheritdoc />
@@ -49,9 +34,6 @@ namespace Api.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Intents");
-
-            migrationBuilder.DropTable(
-                name: "Notes");
         }
     }
 }

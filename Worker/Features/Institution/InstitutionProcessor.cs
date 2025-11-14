@@ -5,7 +5,6 @@ using Notely.Shared.DTOs;
 using System.Net;
 using System.Text.Json;
 using Common.Requests;
-using Tags.Api.Features.AnalyzeNote;
 using Worker.Data;
 
 namespace Worker.Features.Institution;
@@ -55,7 +54,8 @@ internal sealed class InstitutionProcessor(
 
         logger.LogInformation("Institution mutation {MutationIntentId}", mutation.IntentId);
 
-        var result = await MutationHandler.Handle(
+        var mutationHandler = scope.ServiceProvider.GetRequiredService<IInstitutionMutationHandler>();
+        var result = await mutationHandler.HandleAsync(
             new InstitutionMutationRequest(mutation.IntentId, mutation.Action),
             scope.ServiceProvider.GetRequiredService<FrontendDataContext>(),
             scope.ServiceProvider.GetRequiredService<BackendDataContext>(),

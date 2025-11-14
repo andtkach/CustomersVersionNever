@@ -23,9 +23,6 @@ if (string.IsNullOrEmpty(sqlCacheConn))
 builder.AddCache(sqlCacheConn);
 
 
-
-
-
 builder.Services.AddDbContext<FrontendDataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Frontend"));
@@ -37,6 +34,13 @@ builder.Services.AddHttpClient("TagsApi", client =>
     client.BaseAddress = new Uri("https+http://worker");
 });
 
+builder.Services.AddHttpClient("InstitutionsApi", client =>
+{
+    client.BaseAddress = new Uri("https+http://worker");
+});
+
+builder.Services.AddScoped<Api.Features.Institution.Services.IInstitutionCacheService, Api.Features.Institution.Services.InstitutionCacheService>();
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -47,7 +51,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 
-    // Apply EF migrations
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<FrontendDataContext>();
     await dbContext.Database.MigrateAsync();

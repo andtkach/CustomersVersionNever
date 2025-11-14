@@ -1,10 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Notely.ServiceDefaults;
 using Worker.Data;
-using Tags.Api.Features;
-using Tags.Api.Features.AnalyzeNote;
-using Microsoft.Data.SqlClient;
-using Worker;
+using Worker.Cache;
 using Worker.Features;
 using Worker.Features.Institution;
 
@@ -14,13 +11,9 @@ const string aspireServiceBusName = "ServiceBus";
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 builder.AddServiceDefaults();
 
 builder.AddAzureServiceBusClient(aspireServiceBusName);
-
-
 
 var sqlCacheConn = builder.Configuration.GetConnectionString("Cache");
 if (string.IsNullOrEmpty(sqlCacheConn))
@@ -30,8 +23,11 @@ if (string.IsNullOrEmpty(sqlCacheConn))
 
 builder.AddCache(sqlCacheConn);
 
-builder.Services.AddHostedService<NoteCreatedProcessor>();
 builder.Services.AddHostedService<InstitutionProcessor>();
+
+builder.Services.AddScoped<IInstitutionCacheService, InstitutionCacheService>();
+builder.Services.AddScoped<IInstitutionOperationFactory, InstitutionOperationFactory>();
+builder.Services.AddScoped<IInstitutionMutationHandler, InstitutionMutationHandler>();
 
 builder.Services.AddDbContext<BackendDataContext>(options =>
 {
@@ -61,7 +57,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.MapTagsEndpoints();
-
 await app.RunAsync();

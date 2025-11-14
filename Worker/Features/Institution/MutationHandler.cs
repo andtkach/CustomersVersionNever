@@ -1,100 +1,48 @@
-using Azure.Core;
 using Common.Model;
 using Common.Requests;
 using Microsoft.Extensions.Caching.Hybrid;
-using System.Text.Json;
-using Worker.Cache;
 using Worker.Data;
 
 namespace Worker.Features.Institution;
 
-internal static class MutationHandler
+public interface IInstitutionMutationHandler
 {
-    public static async Task<bool> Handle(
+    Task<bool> HandleAsync(
         InstitutionMutationRequest request,
         FrontendDataContext frontendDataContext,
         BackendDataContext backendDataContext,
         HybridCache hybridCache,
-        ILogger<Program> logger)
+        ILogger logger);
+}
+
+internal sealed class InstitutionMutationHandler : IInstitutionMutationHandler
+{
+    private readonly IInstitutionOperationFactory _operationFactory;
+
+    public InstitutionMutationHandler(IInstitutionOperationFactory operationFactory)
+    {
+        _operationFactory = operationFactory;
+    }
+
+    public async Task<bool> HandleAsync(
+        InstitutionMutationRequest request,
+        FrontendDataContext frontendDataContext,
+        BackendDataContext backendDataContext,
+        HybridCache hybridCache,
+        ILogger logger)
     {
         try
         {
+            var intent = await frontendDataContext.Intents.FindAsync(request.IntentId)
+                ?? throw new InvalidOperationException($"Unable to find intent with id {request.IntentId}");
 
-            var intent = await frontendDataContext.Intents.FindAsync(request.IntentId);
-
-            if (intent == null)
-            {
-                throw new InvalidOperationException($"Unable to find intent with id {request.IntentId}");
-            }
-
-            if (intent.Action == "Create")
-            {
-                var payload = JsonSerializer.Deserialize<InstitutionCreatePayload>(intent.Payload);
-                
-                if (payload == null)
-                {
-                    throw new InvalidOperationException($"Unable to deserialize payload for intent {request.IntentId}");
-                }
-
-                var newInstitution = new Data.Institution
-                {
-                    Id = payload.Id,
-                    Name = payload.Name,
-                    Description = payload.Description,
-                };
-
-                await backendDataContext.Institutions.AddAsync(newInstitution);
-                await CacheHelper.CacheInstitution(newInstitution, hybridCache);
-            }
-            else if (intent.Action == "Update")
-            {
-                var payload = JsonSerializer.Deserialize<InstitutionUpdatePayload>(intent.Payload);
-                
-                if (payload == null)
-                {
-                    throw new InvalidOperationException($"Unable to deserialize payload for intent {request.IntentId}");
-                }
-
-                var existingInstitution = await backendDataContext.Institutions.FindAsync(payload.Id);
-                if (existingInstitution == null)
-                {
-                    throw new InvalidOperationException($"Unable to find institution with id {intent.Id}");
-                }
-
-                existingInstitution.Name = payload.Name;
-                existingInstitution.Description = payload.Description;
-                
-                await CacheHelper.CacheInstitution(existingInstitution, hybridCache);
-            }
-            else if (intent.Action == "Delete")
-            {
-                var payload = JsonSerializer.Deserialize<InstitutionDeletePayload>(intent.Payload);
-
-                if (payload == null)
-                {
-                    throw new InvalidOperationException($"Unable to deserialize payload for intent {request.IntentId}");
-                }
-
-                var existingInstitution = await backendDataContext.Institutions.FindAsync(payload.Id);
-                if (existingInstitution == null)
-                {
-                    throw new InvalidOperationException($"Unable to find institution with id {intent.Id}");
-                }
-
-                backendDataContext.Institutions.Remove(existingInstitution);
-                
-                await CacheHelper.ClearInstitution(existingInstitution.Id, hybridCache);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unknown intent action {intent.Action}");
-            }
-
+            var operation = _operationFactory.CreateOperation(intent.Action);
+            await operation.ExecuteAsync(intent, frontendDataContext, backendDataContext, hybridCache);
 
             intent.State = States.Completed;
             intent.UpdatedAtUtc = DateTime.UtcNow;
-            await frontendDataContext.SaveChangesAsync();
             
+            await frontendDataContext.SaveChangesAsync();
             await backendDataContext.SaveChangesAsync();
             
             return true;
@@ -105,6 +53,4 @@ internal static class MutationHandler
             return false;
         }
     }
-
-    
 }

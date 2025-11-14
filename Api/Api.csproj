@@ -28,5 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+    <Folder Include="Features\Institution\DTOs\" />
   </ItemGroup>
 </Project>
