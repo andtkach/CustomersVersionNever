@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Worker.Data.Model;
 
 namespace Worker.Data;
 

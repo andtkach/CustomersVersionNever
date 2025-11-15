@@ -1,5 +1,5 @@
 using Worker.Cache;
-using Worker.Features.Institution.Operations;
+using Worker.Features.Institution.Mutations;
 
 namespace Worker.Features.Institution;
 

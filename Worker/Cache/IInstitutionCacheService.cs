@@ -1,8 +1,10 @@
-﻿namespace Worker.Cache;
+﻿using Worker.Data.Model;
+
+namespace Worker.Cache;
 
 public interface IInstitutionCacheService
 {
-    Task CacheInstitutionAsync(Data.Institution institution);
+    Task CacheInstitutionAsync(Institution institution);
     Task ClearInstitutionAsync(Guid institutionId);
     Task ClearInstitutionsListAsync();
 }

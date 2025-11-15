@@ -3,20 +3,14 @@ using Common.Requests;
 
 namespace Api.Features.Institution.PatchInstitution;
 
-public sealed class PatchInstitutionCommand : IInstitutionCommand<InstitutionPatchPayload>
+public sealed class PatchInstitutionCommand(Guid institutionId, string? name, string? description)
+    : IInstitutionCommand<InstitutionPatchPayload>
 {
     public string Action => "Patch";
     
-    public Guid InstitutionId { get; }
-    public string? Name { get; }
-    public string? Description { get; }
-
-    public PatchInstitutionCommand(Guid institutionId, string? name, string? description)
-    {
-        InstitutionId = institutionId;
-        Name = name;
-        Description = description;
-    }
+    public Guid InstitutionId { get; } = institutionId;
+    public string? Name { get; } = name;
+    public string? Description { get; } = description;
 
     public InstitutionPatchPayload CreatePayload() => new()
     {

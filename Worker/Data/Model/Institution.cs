@@ -1,4 +1,4 @@
-namespace Worker.Data;
+namespace Worker.Data.Model;
 
 public class Institution
 {

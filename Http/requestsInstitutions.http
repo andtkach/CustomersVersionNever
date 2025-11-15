@@ -5,8 +5,8 @@ POST https://localhost:20011/institutions
 Content-Type: application/json
 
 {
-    "name": "Institution2",
-    "description": "Demo institution 2"
+    "name": "Institution1",
+    "description": "Demo institution 1"
 }
 
 ###

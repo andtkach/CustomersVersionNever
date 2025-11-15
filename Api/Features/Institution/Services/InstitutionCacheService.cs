@@ -1,7 +1,5 @@
 using Common.DTOs;
 using Microsoft.Extensions.Caching.Hybrid;
-using System.Text.Json;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace Api.Features.Institution.Services;
 
@@ -21,7 +19,7 @@ public sealed class InstitutionCacheService : IInstitutionCacheService
     private const string InstitutionListCacheKey = "institutions-list";
     private static readonly HybridCacheEntryOptions CacheOptions = new() 
     { 
-        Expiration = TimeSpan.FromMinutes(1) 
+        Expiration = TimeSpan.FromSeconds(30) 
     };
 
     public InstitutionCacheService(

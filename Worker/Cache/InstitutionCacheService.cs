@@ -1,7 +1,7 @@
 ﻿using Common.DTOs;
 using Microsoft.Extensions.Caching.Hybrid;
 using System.Text.Json;
-using Worker.Data;
+using Worker.Data.Model;
 
 namespace Worker.Cache;
 
@@ -9,7 +9,7 @@ public sealed class InstitutionCacheService(HybridCache cache) : IInstitutionCac
 {
     private static readonly HybridCacheEntryOptions CacheOptions = new() 
     { 
-        Expiration = TimeSpan.FromMinutes(10) 
+        Expiration = TimeSpan.FromMinutes(1) 
     };
 
     public async Task CacheInstitutionAsync(Institution institution)

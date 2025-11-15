@@ -24,7 +24,7 @@ var frontendDatabase = database.AddDatabase(aspireFrontendDatabase);
 var backendDatabase = database.AddDatabase(aspireBackendDatabase);
 
 var worker = builder.AddProject<Projects.Worker>("Worker")
-    .WithHttpsEndpoint(5002, name: "public")
+    .WithHttpsEndpoint(20023, name: "public")
     .WithReference(backendDatabase)
     .WithReference(serviceBus)
     .WithReference(cacheDatabase)
@@ -35,7 +35,7 @@ var worker = builder.AddProject<Projects.Worker>("Worker")
     .WaitFor(frontendDatabase);
 
 var api = builder.AddProject<Projects.Api>("Api")
-    .WithHttpsEndpoint(5001, name: "public")
+    .WithHttpsEndpoint(20013, name: "public")
     .WithReference(frontendDatabase)
     .WithReference(serviceBus)
     .WithReference(worker)

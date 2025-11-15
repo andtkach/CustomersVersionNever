@@ -3,16 +3,11 @@ using Common.Requests;
 
 namespace Api.Features.Institution.DeleteInstitution;
 
-public sealed class DeleteInstitutionCommand : IInstitutionCommand<InstitutionDeletePayload>
+public sealed class DeleteInstitutionCommand(Guid institutionId) : IInstitutionCommand<InstitutionDeletePayload>
 {
     public string Action => "Delete";
     
-    public Guid InstitutionId { get; }
-
-    public DeleteInstitutionCommand(Guid institutionId)
-    {
-        InstitutionId = institutionId;
-    }
+    public Guid InstitutionId { get; } = institutionId;
 
     public InstitutionDeletePayload CreatePayload() => new()
     {

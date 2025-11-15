@@ -3,20 +3,14 @@ using Common.Requests;
 
 namespace Api.Features.Institution.UpdateInstitution;
 
-public sealed class UpdateInstitutionCommand : IInstitutionCommand<InstitutionUpdatePayload>
+public sealed class UpdateInstitutionCommand(Guid institutionId, string name, string description)
+    : IInstitutionCommand<InstitutionUpdatePayload>
 {
     public string Action => "Update";
     
-    public Guid InstitutionId { get; }
-    public string Name { get; }
-    public string Description { get; }
-
-    public UpdateInstitutionCommand(Guid institutionId, string name, string description)
-    {
-        InstitutionId = institutionId;
-        Name = name;
-        Description = description;
-    }
+    public Guid InstitutionId { get; } = institutionId;
+    public string Name { get; } = name;
+    public string Description { get; } = description;
 
     public InstitutionUpdatePayload CreatePayload() => new()
     {
