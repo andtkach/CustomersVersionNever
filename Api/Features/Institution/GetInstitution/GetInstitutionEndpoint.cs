@@ -6,24 +6,27 @@ namespace Api.Features.Institution.GetInstitution;
 internal static class GetInstitutionEndpoint
 {
     public static async Task<IResult> GetInstitutionAsync(
-        [FromRoute] Guid id,
-        IInstitutionCacheService cacheService,
-        ILogger<Program> logger)
+        [FromRoute] Guid institutionId,
+        [FromQuery] bool? includeCustomers,
+        [FromServices] IInstitutionCacheService cacheService,
+        [FromServices] ILogger<Program> logger)
     {
         try
         {
-            var institution = await cacheService.GetInstitutionAsync(id);
-            
-            if (institution == null)
+            if (includeCustomers is true)
             {
-                return Results.NotFound($"Institution with id {id} not found");
+                var institution = await cacheService.GetInstitutionWithCustomersAsync(institutionId);
+                return institution == null ? Results.NotFound($"Institution with id {institutionId} not found") : Results.Ok(institution);
             }
-
-            return Results.Ok(institution);
+            else
+            {
+                var institution = await cacheService.GetInstitutionAsync(institutionId);
+                return institution == null ? Results.NotFound($"Institution with id {institutionId} not found") : Results.Ok(institution);
+            }
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error getting institution {InstitutionId}", id);
+            logger.LogError(ex, "Error getting institution {InstitutionId}", institutionId);
             return Results.Problem("An error occurred while retrieving the institution");
         }
     }

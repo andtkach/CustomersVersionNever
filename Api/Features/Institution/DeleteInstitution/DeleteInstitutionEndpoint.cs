@@ -1,13 +1,14 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Microsoft.AspNetCore.Mvc;
 using Api.Data;
-using Api.Features.Institution.Abstractions;
+using Api.Abstractions;
+using Common.Requests.Institution;
 
 namespace Api.Features.Institution.DeleteInstitution
 {
     internal static class DeleteInstitutionEndpoint
     {
-        private static readonly InstitutionCommandHandler<DeleteInstitutionCommand, Common.Requests.InstitutionDeletePayload> Handler = new();
+        private static readonly BaseCommandHandler<DeleteInstitutionCommand, InstitutionDeletePayload> Handler = new();
         
         public static async Task<IResult> DeleteInstitutionAsync(
             [FromRoute] Guid institutionId,
@@ -22,6 +23,8 @@ namespace Api.Features.Institution.DeleteInstitution
                 command,
                 dbContext,
                 serviceBusClient,
+                "Institution",
+                "Institutions",
                 logger,
                 () => Results.Ok());
         }

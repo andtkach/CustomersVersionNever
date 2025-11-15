@@ -1,0 +1,50 @@
+// Customers
+
+// Create customer
+POST https://localhost:20011/customers
+Content-Type: application/json
+
+{
+    "institutionId": "019a8771-fcfe-7663-b1c6-75703a3f771b",
+    "firstName": "John",
+    "lastName": "Doe"
+}
+
+###
+
+// Get customer
+GET https://localhost:20011/customers/GUID
+
+###
+
+// Get customers
+GET https://localhost:20011/customers
+
+
+###
+
+// update customer
+PUT https://localhost:20011/customers/GUID
+Content-Type: application/json
+
+{
+    "institutionId": "GUID",
+    "firstName": "FN Updated",
+    "lastName": "LN Updated"
+}
+
+###
+
+// patch customer
+PATCH https://localhost:20011/customers/GUID
+Content-Type: application/json
+
+{
+    "firstName": "FN patched"
+}
+###
+
+// delete customer
+DELETE https://localhost:20011/customers/GUID
+
+###

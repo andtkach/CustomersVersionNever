@@ -1,4 +1,4 @@
-﻿namespace Common.Requests
+﻿namespace Common.Requests.Institution
 {
     public class InstitutionDeletePayload
     {

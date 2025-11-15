@@ -1,6 +1,8 @@
 const string aspireServiceBusName = "ServiceBus";
 const string institutionsQueueName = "Institutions";
 const string customersQueueName = "Customers";
+const string documentsQueueName = "Documents";
+const string addressesQueueName = "Addresses";
 const string aspireDatabaseServer = "Database";
 const string aspireCacheDatabase = "Cache";
 const string aspireFrontendDatabase = "Frontend";
@@ -13,6 +15,8 @@ var serviceBus = builder.AddAzureServiceBus(aspireServiceBusName)
 
 serviceBus.AddServiceBusQueue(institutionsQueueName);
 serviceBus.AddServiceBusQueue(customersQueueName);
+serviceBus.AddServiceBusQueue(documentsQueueName);
+serviceBus.AddServiceBusQueue(addressesQueueName);
 
 var sqlPassword = builder.AddParameter("sql-password", secret: true, value: "sql-password-2025!?");
 var database = builder.AddSqlServer(aspireDatabaseServer, port: 1439, password: sqlPassword)

@@ -1,6 +1,6 @@
-﻿namespace Common.Requests
+﻿namespace Common.Requests.Institution
 {
-    public class InstitutionCreatePayload
+    public class InstitutionUpdatePayload
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = "";

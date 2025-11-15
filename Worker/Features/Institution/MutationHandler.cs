@@ -1,5 +1,5 @@
 using Common.Model;
-using Common.Requests;
+using Common.Requests.Institution;
 using Microsoft.Extensions.Caching.Hybrid;
 using Worker.Data;
 

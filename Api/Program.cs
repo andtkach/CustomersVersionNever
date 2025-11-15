@@ -27,12 +27,13 @@ builder.Services.AddDbContext<FrontendDataContext>(options =>
 });
 builder.EnrichSqlServerDbContext<FrontendDataContext>();
 
-builder.Services.AddHttpClient("InstitutionsApi", client =>
+builder.Services.AddHttpClient("WorkerApi", client =>
 {
-    client.BaseAddress = new Uri("https+http://worker");
+    client.BaseAddress = new Uri("http://worker");
 });
 
 builder.Services.AddScoped<Api.Features.Institution.Services.IInstitutionCacheService, Api.Features.Institution.Services.InstitutionCacheService>();
+builder.Services.AddScoped<Api.Features.Customer.Services.ICustomerCacheService, Api.Features.Customer.Services.CustomerCacheService>();
 
 builder.Services.AddOpenApi();
 

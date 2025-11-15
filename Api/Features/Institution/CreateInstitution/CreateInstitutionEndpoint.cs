@@ -1,7 +1,8 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Microsoft.AspNetCore.Mvc;
 using Api.Data;
-using Api.Features.Institution.Abstractions;
+using Api.Abstractions;
+using Common.Requests.Institution;
 
 namespace Api.Features.Institution.CreateInstitution
 {
@@ -10,14 +11,14 @@ namespace Api.Features.Institution.CreateInstitution
         public record Request(string Name, string Description);
         public record Response(Guid Id, string Name, string Description);
         
-        private static readonly InstitutionCommandHandler<CreateInstitutionCommand, Common.Requests.InstitutionCreatePayload> Handler = new();
+        private static readonly BaseCommandHandler<CreateInstitutionCommand, InstitutionCreatePayload> Handler = new();
         
         public static async Task<IResult> CreateInstitutionAsync(
             [FromBody] Request request,
-            FrontendDataContext dbContext,
-            ServiceBusClient serviceBusClient,
-            IHttpClientFactory httpClientFactory,
-            ILogger<Program> logger)
+            [FromServices] FrontendDataContext dbContext,
+            [FromServices] ServiceBusClient serviceBusClient,
+            [FromServices] IHttpClientFactory httpClientFactory,
+            [FromServices] ILogger<Program> logger)
         {
             var institutionId = Guid.CreateVersion7();
             var command = new CreateInstitutionCommand(institutionId, request.Name, request.Description);
@@ -27,6 +28,8 @@ namespace Api.Features.Institution.CreateInstitution
                 command,
                 dbContext,
                 serviceBusClient,
+                "Institution",
+                "Institutions",
                 logger,
                 () => Results.Created($"institutions/{institutionId}", response));
         }

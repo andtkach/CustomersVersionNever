@@ -1,10 +1,10 @@
-using Api.Features.Institution.Abstractions;
-using Common.Requests;
+using Api.Abstractions;
+using Common.Requests.Institution;
 
 namespace Api.Features.Institution.UpdateInstitution;
 
 public sealed class UpdateInstitutionCommand(Guid institutionId, string name, string description)
-    : IInstitutionCommand<InstitutionUpdatePayload>
+    : IBaseCommand<InstitutionUpdatePayload>
 {
     public string Action => "Update";
     
@@ -12,7 +12,7 @@ public sealed class UpdateInstitutionCommand(Guid institutionId, string name, st
     public string Name { get; } = name;
     public string Description { get; } = description;
 
-    public InstitutionUpdatePayload CreatePayload() => new()
+    public InstitutionUpdatePayload Payload() => new()
     {
         Id = InstitutionId,
         Name = Name,

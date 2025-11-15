@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Hybrid;
 using System.Text.Json;
 using Common.Contracts;
 using Common.Requests;
+using Common.Requests.Institution;
 using Worker.Data;
 
 namespace Worker.Features.Institution;
@@ -41,7 +42,7 @@ internal sealed class InstitutionProcessor(
 
     private async Task ProcessMessage(ProcessMessageEventArgs args)
     {
-        var mutation = JsonSerializer.Deserialize<InstitutionMutation>(args.Message.Body);
+        var mutation = JsonSerializer.Deserialize<EntityMutation>(args.Message.Body);
 
         if (mutation is null)
         {

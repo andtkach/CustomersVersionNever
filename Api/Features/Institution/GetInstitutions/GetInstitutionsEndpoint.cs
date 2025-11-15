@@ -1,22 +1,29 @@
 using Api.Features.Institution.Services;
 using Common.Dto;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Features.Institution.GetInstitutions;
 
 internal static class GetInstitutionsEndpoint
 {
     public record GetInstitutionsResponse(IEnumerable<InstitutionDto> Institutions);
+    public record GetInstitutionsWithCustomersResponse(IEnumerable<InstitutionWithCustomersDto> Institutions);
 
     public static async Task<IResult> GetInstitutionsAsync(
         IInstitutionCacheService cacheService,
+        [FromQuery] bool? includeCustomers,
         ILogger<Program> logger)
     {
         try
         {
-            var institutions = await cacheService.GetInstitutionsAsync();
-            var response = new GetInstitutionsResponse(institutions);
-            
-            return Results.Ok(response);
+            if (includeCustomers is true)
+            {
+                return Results.Ok(new GetInstitutionsWithCustomersResponse(await cacheService.GetInstitutionsWithCustomersAsync()));
+            }
+            else
+            {
+                return Results.Ok(new GetInstitutionsResponse(await cacheService.GetInstitutionsAsync()));
+            }
         }
         catch (Exception ex)
         {

@@ -1,7 +1,8 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Microsoft.AspNetCore.Mvc;
 using Api.Data;
-using Api.Features.Institution.Abstractions;
+using Api.Abstractions;
+using Common.Requests.Institution;
 
 namespace Api.Features.Institution.PatchInstitution
 {
@@ -9,7 +10,7 @@ namespace Api.Features.Institution.PatchInstitution
     {
         public record Request(string? Name, string? Description);
         
-        private static readonly InstitutionCommandHandler<PatchInstitutionCommand, Common.Requests.InstitutionPatchPayload> Handler = new();
+        private static readonly BaseCommandHandler<PatchInstitutionCommand, InstitutionPatchPayload> Handler = new();
         
         public static async Task<IResult> PatchInstitutionAsync(
             [FromBody] Request request,
@@ -25,6 +26,8 @@ namespace Api.Features.Institution.PatchInstitution
                 command,
                 dbContext,
                 serviceBusClient,
+                "Institution",
+                "Institutions",
                 logger,
                 () => Results.NoContent());
         }

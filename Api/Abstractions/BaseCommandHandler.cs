@@ -4,35 +4,37 @@ using Common.Model;
 using System.Text.Json;
 using Common.Contracts;
 
-namespace Api.Features.Institution.Abstractions;
+namespace Api.Abstractions;
 
-public interface IInstitutionCommand<TPayload>
+public interface IBaseCommand<TPayload>
 {
     string Action { get; }
-    TPayload CreatePayload();
+    TPayload Payload();
     string GetLogMessage();
     string GetErrorMessage();
 }
 
-public sealed class InstitutionCommandHandler<TCommand, TPayload> 
-    where TCommand : IInstitutionCommand<TPayload>
+public sealed class BaseCommandHandler<TCommand, TPayload> 
+    where TCommand : IBaseCommand<TPayload>
 {
     public async Task<IResult> ExecuteAsync(
         TCommand command,
         FrontendDataContext dbContext,
         ServiceBusClient serviceBusClient,
+        string entityName,
+        string queueName,
         ILogger logger,
         Func<IResult> onSuccess)
     {
         try
         {
-            var payload = command.CreatePayload();
+            var payload = command.Payload();
             
             var intent = new Intent
             {
                 Id = Guid.CreateVersion7(),
                 Action = command.Action,
-                Entity = "Institution",
+                Entity = entityName,
                 Payload = JsonSerializer.Serialize(payload),
                 State = States.Created,
                 CreatedAtUtc = DateTime.UtcNow
@@ -41,8 +43,8 @@ public sealed class InstitutionCommandHandler<TCommand, TPayload>
             dbContext.Intents.Add(intent);
             await dbContext.SaveChangesAsync();
 
-            await using var sender = serviceBusClient.CreateSender("institutions");
-            var mutation = new InstitutionMutation(intent.Id, intent.Action);
+            await using var sender = serviceBusClient.CreateSender(queueName);
+            var mutation = new EntityMutation(intent.Id, intent.Action);
             await sender.SendMessageAsync(new ServiceBusMessage(JsonSerializer.Serialize(mutation)));
 
             return onSuccess();

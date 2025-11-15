@@ -3,6 +3,7 @@ using ServiceDefaults;
 using Worker.Data;
 using Worker.Cache;
 using Worker.Features;
+using Worker.Features.Customer;
 using Worker.Features.Institution;
 
 AppContext.SetSwitch("Azure.Experimental.EnableActivitySource", true);
@@ -24,10 +25,15 @@ if (string.IsNullOrEmpty(sqlCacheConn))
 builder.AddCache(sqlCacheConn);
 
 builder.Services.AddHostedService<InstitutionProcessor>();
+builder.Services.AddHostedService<CustomerProcessor>();
 
 builder.Services.AddScoped<IInstitutionCacheService, InstitutionCacheService>();
 builder.Services.AddScoped<IInstitutionOperationFactory, InstitutionOperationFactory>();
 builder.Services.AddScoped<IInstitutionMutationHandler, InstitutionMutationHandler>();
+
+builder.Services.AddScoped<ICustomerCacheService, CustomerCacheService>();
+builder.Services.AddScoped<ICustomerOperationFactory, CustomerOperationFactory>();
+builder.Services.AddScoped<ICustomerMutationHandler, CustomerMutationHandler>();
 
 builder.Services.AddDbContext<BackendDataContext>(options =>
 {
@@ -58,4 +64,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapInstitutionsEndpoints();
+app.MapCustomersEndpoints();
 await app.RunAsync();

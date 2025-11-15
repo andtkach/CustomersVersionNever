@@ -1,4 +1,4 @@
-// Institution
+// Institutions
 
 // Create institution
 POST https://localhost:20011/institutions
@@ -12,13 +12,23 @@ Content-Type: application/json
 ###
 
 // Get institution
-GET https://localhost:20011/institutions/019a86a3-4c73-73cb-bc5e-eba5d34f920d
+GET https://localhost:20011/institutions/019a8771-fcfe-7663-b1c6-75703a3f771b
 
 ###
 
 // Get institutions
 GET https://localhost:20011/institutions
 
+
+###
+
+// Get institution with customers
+GET https://localhost:20011/institutions/019a8771-fcfe-7663-b1c6-75703a3f771b?includeCustomers=true
+
+###
+
+// Get institutions with customers
+GET https://localhost:20011/institutions?includeCustomers=true
 
 ###
 
