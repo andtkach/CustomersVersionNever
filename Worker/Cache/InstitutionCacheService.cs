@@ -32,4 +32,10 @@ public sealed class InstitutionCacheService(HybridCache cache) : IInstitutionCac
         var cacheKey = "institutions-list";
         await cache.RemoveAsync(cacheKey);
     }
+
+    public async Task ClearInstitutionListsAsync()
+    {
+        await cache.RemoveAsync("institutions-list");
+        await cache.RemoveAsync("institutions-list-with-customers");
+    }
 }

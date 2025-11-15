@@ -1,0 +1,53 @@
+// Documents
+
+// Create document
+POST https://localhost:20011/documents
+Content-Type: application/json
+
+{
+    "customerId": "019a88f8-fd35-7f93-a65e-69e8bfe43065",
+    "title": "Document 1",
+    "content": "Text of document 1",
+    "active": true
+}
+
+###
+
+// Get document
+GET https://localhost:20011/documents/GUID
+
+###
+
+// Get documents
+GET https://localhost:20011/documents
+
+
+###
+
+// update document
+PUT https://localhost:20011/docuuments/GUID
+Content-Type: application/json
+
+{
+    "customerId": "GUID",
+    "title": "New title",
+    "content": "New content",
+    "active": false
+}
+
+###
+
+// patch document
+PATCH https://localhost:20011/documents/019A88FA-1202-7691-92E6-52F21010CDA6
+Content-Type: application/json
+
+{
+  "customerId": "019A88F8-FD35-7F93-A65E-69E8BFE43065",
+    "active": true
+}
+###
+
+// delete document
+DELETE https://localhost:20011/documents/GUID
+
+###

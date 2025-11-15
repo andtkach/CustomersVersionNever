@@ -1,5 +1,7 @@
 ﻿using Worker.Features.Customer.GetCustomer;
-using Worker.Features.customer.GetCustomers;
+using Worker.Features.Customer.GetCustomers;
+using Worker.Features.Document.GetDocument;
+using Worker.Features.Document.GetDocuments;
 using Worker.Features.Institution.GetInstitution;
 using Worker.Features.Institution.GetInstitutions;
 
@@ -19,6 +21,14 @@ public static class WorkerEndpoints
     {
         app.MapGet("customers/{customerId:guid}", GetCustomerEndpoint.GetCustomerAsync);
         app.MapGet("customers", GetCustomersEndpoint.GetCustomersAsync);
+
+        return app;
+    }
+
+    public static IEndpointRouteBuilder MapDocumentsEndpoints(this IEndpointRouteBuilder app)
+    {
+        app.MapGet("documents/{documentId:guid}", GetDocumentEndpoint.GetDocumentAsync);
+        app.MapGet("documents", GetDocumentsEndpoint.GetDocumentsAsync);
 
         return app;
     }

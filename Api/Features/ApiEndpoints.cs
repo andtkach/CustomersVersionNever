@@ -10,6 +10,12 @@ using Api.Features.Institution.GetInstitution;
 using Api.Features.Institution.GetInstitutions;
 using Api.Features.Institution.PatchInstitution;
 using Api.Features.Institution.UpdateInstitution;
+using Api.Features.Document.CreateDocument;
+using Api.Features.Document.DeleteDocument;
+using Api.Features.Document.GetDocument;
+using Api.Features.Document.GetDocuments;
+using Api.Features.Document.PatchDocument;
+using Api.Features.Document.UpdateDocument;
 
 namespace Api.Features;
 
@@ -30,7 +36,14 @@ public static class ApiEndpoints
         app.MapDelete("/customers/{customerId:guid}", DeleteCustomerEndpoint.DeleteCustomerAsync);
         app.MapGet("/customers/{customerId:guid}", GetCustomerEndpoint.GetCustomerAsync);
         app.MapGet("/customers", GetCustomersEndpoint.GetCustomersAsync);
-        
+
+        app.MapPost("/documents", CreateDocumentEndpoint.CreateDocumentAsync);
+        app.MapPut("/documents/{documentId:guid}", UpdateDocumentEndpoint.UpdateDocumentAsync);
+        app.MapPatch("/documents/{documentId:guid}", PatchDocumentEndpoint.PatchDocumentAsync);
+        app.MapDelete("/documents/{documentId:guid}", DeleteDocumentEndpoint.DeleteDocumentAsync);
+        app.MapGet("/documents/{documentId:guid}", GetDocumentEndpoint.GetDocumentAsync);
+        app.MapGet("/documents", GetDocumentsEndpoint.GetDocumentsAsync);
+
         return app;
     }
 }

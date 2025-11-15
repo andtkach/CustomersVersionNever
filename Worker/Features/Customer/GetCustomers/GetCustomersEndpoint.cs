@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Worker.Data;
 
-namespace Worker.Features.customer.GetCustomers;
+namespace Worker.Features.Customer.GetCustomers;
 
 public record CustomerResponse(Guid Id, Guid InstitutionId, string FirstName, string LastName);
 

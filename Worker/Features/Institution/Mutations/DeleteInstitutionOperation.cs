@@ -23,6 +23,6 @@ public class DeleteInstitutionOperation(IInstitutionCacheService cacheService) :
 
         backendDataContext.Institutions.Remove(existingInstitution);
         await cacheService.ClearInstitutionAsync(existingInstitution.Id);
-        await cacheService.ClearInstitutionsListAsync();
+        await cacheService.ClearInstitutionListsAsync();
     }
 }

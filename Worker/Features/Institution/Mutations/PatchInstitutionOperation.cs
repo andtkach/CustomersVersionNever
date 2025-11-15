@@ -25,6 +25,6 @@ public class PatchInstitutionOperation(IInstitutionCacheService cacheService) : 
         existingInstitution.Description = payload.Description ?? existingInstitution.Description;
 
         await cacheService.CacheInstitutionAsync(existingInstitution);
-        await cacheService.ClearInstitutionsListAsync();
+        await cacheService.ClearInstitutionListsAsync();
     }
 }
