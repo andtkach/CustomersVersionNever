@@ -5,7 +5,7 @@ namespace Worker.Features;
 
 public static class WorkerEndpoints
 {
-    public static IEndpointRouteBuilder MapTagsEndpoints(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapInstitutionsEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("institutions/{id:guid}", GetInstitutionEndpoint.GetInstitutionAsync);
         app.MapGet("institutions", GetInstitutionsEndpoint.GetInstitutionsAsync);

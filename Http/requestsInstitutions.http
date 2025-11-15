@@ -12,7 +12,7 @@ Content-Type: application/json
 ###
 
 // Get institution
-GET https://localhost:20011/institutions/019a83f6-1881-703a-8c8a-a669848ddbe1
+GET https://localhost:20011/institutions/019a86a3-4c73-73cb-bc5e-eba5d34f920d
 
 ###
 
@@ -23,7 +23,7 @@ GET https://localhost:20011/institutions
 ###
 
 // update institution
-PUT https://localhost:20011/institutions/019a8379-8b8c-771e-aad3-1b24e9b8980e
+PUT https://localhost:20011/institutions/019a86a3-4c73-73cb-bc5e-eba5d34f920d
 Content-Type: application/json
 
 {
@@ -34,7 +34,7 @@ Content-Type: application/json
 ###
 
 // patch institution
-PATCH https://localhost:20011/institutions/id
+PATCH https://localhost:20011/institutions/019a86a3-4c73-73cb-bc5e-eba5d34f920d
 Content-Type: application/json
 
 {

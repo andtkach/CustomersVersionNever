@@ -1,6 +1,5 @@
-﻿using Common.DTOs;
-using Microsoft.Extensions.Caching.Hybrid;
-using System.Text.Json;
+﻿using Microsoft.Extensions.Caching.Hybrid;
+using Common.Dto;
 using Worker.Data.Model;
 
 namespace Worker.Cache;

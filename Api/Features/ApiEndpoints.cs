@@ -9,7 +9,7 @@ namespace Api.Features;
 
 public static class ApiEndpoints
 {
-    public static IEndpointRouteBuilder MapNoteEndpoints(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapInstitutionsEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/institutions", CreateInstitutionEndpoint.CreateInstitutionAsync);
         app.MapPut("/institutions/{institutionId}", UpdateInstitutionEndpoint.UpdateInstitutionAsync);

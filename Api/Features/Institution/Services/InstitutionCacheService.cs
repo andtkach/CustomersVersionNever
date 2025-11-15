@@ -1,4 +1,4 @@
-using Common.DTOs;
+using Common.Dto;
 using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Api.Features.Institution.Services;

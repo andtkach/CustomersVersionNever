@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Notely.ServiceDefaults;
+using ServiceDefaults;
 using Worker.Data;
 using Worker.Cache;
 using Worker.Features;
@@ -57,5 +57,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapTagsEndpoints();
+app.MapInstitutionsEndpoints();
 await app.RunAsync();

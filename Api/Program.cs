@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Notely.ServiceDefaults;
 using Api.Data;
 using Api.Features;
+using ServiceDefaults;
 
 AppContext.SetSwitch("Azure.Experimental.EnableActivitySource", true);
 
@@ -13,7 +13,6 @@ builder.AddServiceDefaults();
 
 builder.AddAzureServiceBusClient(aspireServiceBusName);
 
-
 var sqlCacheConn = builder.Configuration.GetConnectionString("Cache");
 if (string.IsNullOrEmpty(sqlCacheConn))
 {
@@ -22,17 +21,11 @@ if (string.IsNullOrEmpty(sqlCacheConn))
 
 builder.AddCache(sqlCacheConn);
 
-
 builder.Services.AddDbContext<FrontendDataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Frontend"));
 });
 builder.EnrichSqlServerDbContext<FrontendDataContext>();
-
-builder.Services.AddHttpClient("TagsApi", client =>
-{
-    client.BaseAddress = new Uri("https+http://worker");
-});
 
 builder.Services.AddHttpClient("InstitutionsApi", client =>
 {
@@ -57,7 +50,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.MapNoteEndpoints();
-
+app.MapInstitutionsEndpoints();
 await app.RunAsync();

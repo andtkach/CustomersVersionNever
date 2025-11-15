@@ -1,8 +1,8 @@
 using Api.Data;
 using Azure.Messaging.ServiceBus;
 using Common.Model;
-using Notely.Shared.Contracts;
 using System.Text.Json;
+using Common.Contracts;
 
 namespace Api.Features.Institution.Abstractions;
 

@@ -1,5 +1,5 @@
 using Api.Features.Institution.Services;
-using Common.DTOs;
+using Common.Dto;
 
 namespace Api.Features.Institution.GetInstitutions;
 

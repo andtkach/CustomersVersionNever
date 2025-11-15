@@ -1,9 +1,7 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Caching.Hybrid;
-using Notely.Shared.Contracts;
-using Notely.Shared.DTOs;
-using System.Net;
 using System.Text.Json;
+using Common.Contracts;
 using Common.Requests;
 using Worker.Data;
 
