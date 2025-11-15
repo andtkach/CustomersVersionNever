@@ -7,6 +7,8 @@ public class BackendDataContext(DbContextOptions<BackendDataContext> options) : 
 {
     public DbSet<Institution> Institutions { get; set; }
     public DbSet<Customer> Customers { get; set; }
+    public DbSet<Document> Documents { get; set; }
+    public DbSet<Address> Addresses { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -18,11 +20,9 @@ public class BackendDataContext(DbContextOptions<BackendDataContext> options) : 
             entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Description).HasMaxLength(2000);
 
-            // Configure one-to-many (Institution -> Customers)
             entity.HasMany(i => i.Customers)
                 .WithOne(c => c.Institution)
                 .HasForeignKey(c => c.InstitutionId)
-                // Prevent accidental cascade delete; require explicit handling when removing an institution
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -32,11 +32,39 @@ public class BackendDataContext(DbContextOptions<BackendDataContext> options) : 
             entity.Property(e => e.Id).ValueGeneratedNever();
 
             entity.Property(e => e.FirstName).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.LastName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.LastName).HasMaxLength(200);
 
-            // FK configuration
             entity.Property<Guid>(e => e.InstitutionId).IsRequired();
             entity.HasIndex(e => e.InstitutionId).HasDatabaseName("IX_Customers_InstitutionId");
+        });
+
+        modelBuilder.Entity<Document>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+
+            entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Content).HasMaxLength(2000);
+
+            entity.Property(e => e.Active).HasDefaultValue(true);
+            
+            entity.Property<Guid>(e => e.CustomerId).IsRequired();
+            entity.HasIndex(e => e.CustomerId).HasDatabaseName("IX_Documents_CustomerId");
+        });
+
+        modelBuilder.Entity<Address>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+
+            entity.Property(e => e.Country).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.City).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Street).IsRequired().HasMaxLength(200);
+
+            entity.Property(e => e.Current).HasDefaultValue(false);
+
+            entity.Property<Guid>(e => e.CustomerId).IsRequired();
+            entity.HasIndex(e => e.CustomerId).HasDatabaseName("IX_Addresses_CustomerId");
         });
     }
 }

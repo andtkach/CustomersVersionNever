@@ -7,6 +7,6 @@ public class Customer
     public string LastName { get; set; } = string.Empty;
     public Guid InstitutionId { get; set; }
     public Institution Institution { get; set; } = null!;
-
-
+    public List<Document> Documents { get; set; } = new();
+    public List<Address> Addresses { get; set; } = new();
 }
