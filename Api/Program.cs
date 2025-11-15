@@ -35,6 +35,7 @@ builder.Services.AddHttpClient("WorkerApi", client =>
 builder.Services.AddScoped<Api.Features.Institution.Services.IInstitutionCacheService, Api.Features.Institution.Services.InstitutionCacheService>();
 builder.Services.AddScoped<Api.Features.Customer.Services.ICustomerCacheService, Api.Features.Customer.Services.CustomerCacheService>();
 builder.Services.AddScoped<Api.Features.Document.Services.IDocumentCacheService, Api.Features.Document.Services.DocumentCacheService>();
+builder.Services.AddScoped<Api.Features.Address.Services.IAddressCacheService, Api.Features.Address.Services.AddressCacheService>();
 
 builder.Services.AddOpenApi();
 

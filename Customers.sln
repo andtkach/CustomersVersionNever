@@ -16,6 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
 		db-ops.txt = db-ops.txt
+		Http\requestsAddresses.http = Http\requestsAddresses.http
 		Http\requestsCustomers.http = Http\requestsCustomers.http
 		Http\requestsDocuments.http = Http\requestsDocuments.http
 		Http\requestsInstitutions.http = Http\requestsInstitutions.http

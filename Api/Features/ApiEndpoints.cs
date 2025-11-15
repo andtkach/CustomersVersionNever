@@ -16,6 +16,12 @@ using Api.Features.Document.GetDocument;
 using Api.Features.Document.GetDocuments;
 using Api.Features.Document.PatchDocument;
 using Api.Features.Document.UpdateDocument;
+using Api.Features.Address.CreateAddress;
+using Api.Features.Address.DeleteAddress;
+using Api.Features.Address.GetAddresses;
+using Api.Features.Address.GetAddress;
+using Api.Features.Address.PatchAddress;
+using Api.Features.Address.UpdateAddress;
 
 namespace Api.Features;
 
@@ -43,6 +49,13 @@ public static class ApiEndpoints
         app.MapDelete("/documents/{documentId:guid}", DeleteDocumentEndpoint.DeleteDocumentAsync);
         app.MapGet("/documents/{documentId:guid}", GetDocumentEndpoint.GetDocumentAsync);
         app.MapGet("/documents", GetDocumentsEndpoint.GetDocumentsAsync);
+
+        app.MapPost("/addresses", CreateAddressEndpoint.CreateAddressAsync);
+        app.MapPut("/addresses/{addressId:guid}", UpdateAddressEndpoint.UpdateAddressAsync);
+        app.MapPatch("/addresses/{addressId:guid}", PatchAddressEndpoint.PatchAddressAsync);
+        app.MapDelete("/addresses/{addressId:guid}", DeleteAddressEndpoint.DeleteAddressAsync);
+        app.MapGet("/addresses/{addressId:guid}", GetAddressEndpoint.GetAddressAsync);
+        app.MapGet("/addresses", GetAddressesEndpoint.GetAddressesAsync);
 
         return app;
     }

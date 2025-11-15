@@ -5,7 +5,7 @@ POST https://localhost:20011/customers
 Content-Type: application/json
 
 {
-    "institutionId": "019a88f8-bd61-7df0-bbb1-ab5dfc4b440d",
+    "institutionId": "019a895a-33c6-7a81-a33c-ded6dc907d9b",
     "firstName": "John",
     "lastName": "Doe"
 }

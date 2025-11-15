@@ -1,0 +1,55 @@
+// Addresses
+
+// Create address
+POST https://localhost:20011/addresses
+Content-Type: application/json
+
+{
+    "customerId": "019a895a-8224-70db-834b-513e7b68bd68",
+    "country": "Country 1",
+    "city": "Some city",
+    "street": "The street",
+    "current": true
+}
+
+###
+
+// Get address
+GET https://localhost:20011/addresses/GUID
+
+###
+
+// Get addresses
+GET https://localhost:20011/addresses
+
+
+###
+
+// update address
+PUT https://localhost:20011/addresses/GUID
+Content-Type: application/json
+
+{
+    "customerId": "GUID",
+    "country": "Country 2",
+    "city": "Some city 2",
+    "street": "The street 2",
+    "current": false
+}
+
+###
+
+// patch address
+PATCH https://localhost:20011/addresses/019A895A-BC37-7B9B-8867-9E625469CDD5
+Content-Type: application/json
+
+{
+  "customerId": "019A895A-8224-70DB-834B-513E7B68BD68",
+    "current": false
+}
+###
+
+// delete addresse
+DELETE https://localhost:20011/addresses/GUID
+
+###

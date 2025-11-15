@@ -4,6 +4,8 @@ using Worker.Features.Document.GetDocument;
 using Worker.Features.Document.GetDocuments;
 using Worker.Features.Institution.GetInstitution;
 using Worker.Features.Institution.GetInstitutions;
+using Worker.Features.Address.GetAddress;
+using Worker.Features.Address.GetAddresses;
 
 namespace Worker.Features;
 
@@ -29,6 +31,14 @@ public static class WorkerEndpoints
     {
         app.MapGet("documents/{documentId:guid}", GetDocumentEndpoint.GetDocumentAsync);
         app.MapGet("documents", GetDocumentsEndpoint.GetDocumentsAsync);
+
+        return app;
+    }
+
+    public static IEndpointRouteBuilder MapAddressesEndpoints(this IEndpointRouteBuilder app)
+    {
+        app.MapGet("addresses/{addressId:guid}", GetAddressEndpoint.GetAddressAsync);
+        app.MapGet("addresses", GetAddressesEndpoint.GetAddressesAsync);
 
         return app;
     }

@@ -6,6 +6,7 @@ using Worker.Features;
 using Worker.Features.Customer;
 using Worker.Features.Document;
 using Worker.Features.Institution;
+using Worker.Features.Address;
 
 AppContext.SetSwitch("Azure.Experimental.EnableActivitySource", true);
 
@@ -28,6 +29,7 @@ builder.AddCache(sqlCacheConn);
 builder.Services.AddHostedService<InstitutionProcessor>();
 builder.Services.AddHostedService<CustomerProcessor>();
 builder.Services.AddHostedService<DocumentProcessor>();
+builder.Services.AddHostedService<AddressProcessor>();
 
 builder.Services.AddScoped<IInstitutionCacheService, InstitutionCacheService>();
 builder.Services.AddScoped<IInstitutionOperationFactory, InstitutionOperationFactory>();
@@ -40,6 +42,10 @@ builder.Services.AddScoped<ICustomerMutationHandler, CustomerMutationHandler>();
 builder.Services.AddScoped<IDocumentCacheService, DocumentCacheService>();
 builder.Services.AddScoped<IDocumentOperationFactory, DocumentOperationFactory>();
 builder.Services.AddScoped<IDocumentMutationHandler, DocumentMutationHandler>();
+
+builder.Services.AddScoped<IAddressCacheService, AddressCacheService>();
+builder.Services.AddScoped<IAddressOperationFactory, AddressOperationFactory>();
+builder.Services.AddScoped<IAddressMutationHandler, AddressMutationHandler>();
 
 builder.Services.AddDbContext<BackendDataContext>(options =>
 {
@@ -72,4 +78,5 @@ app.UseHttpsRedirection();
 app.MapInstitutionsEndpoints();
 app.MapCustomersEndpoints();
 app.MapDocumentsEndpoints();
+app.MapAddressesEndpoints();
 await app.RunAsync();
