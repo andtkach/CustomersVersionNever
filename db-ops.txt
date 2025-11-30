@@ -1,3 +1,4 @@
 Migrations, in root folder
 dotnet ef migrations add InitialCreate --project Api --startup-project Api -o Data/Migrations
 dotnet ef migrations add InitialCreate --project Worker --startup-project Worker --context BackendDataContext -o Data/Migrations
+dotnet ef migrations add InitialCreate --project Auth --startup-project Auth -o Data/Migrations

@@ -1,0 +1,33 @@
+// Auth
+
+// Register user
+POST https://localhost:20031/register
+Content-Type: application/json
+
+{
+	"email": "user2@email.com",
+	"company": "Company 1",
+	"password": "Secret123!"
+}
+
+###
+
+// Login user
+POST https://localhost:20031/login
+Content-Type: application/json
+
+{
+	"email": "user1@email.com",
+	"password": "Secret123!"
+}
+
+###
+
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMSIsImV4cCI6MTc2NDUwMjI0MCwic3ViIjoiMDA1NzczYTgtNGU1OC00Y2ZkLWFlMDMtM2VjZGExMTcyYjcwIiwiZW1haWwiOiJ1c2VyMUBlbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJNZW1iZXIiLCJwZXJtaXNzaW9uIjpbInVzZXJzOnJlYWQiLCJ1c2Vyczp1cGRhdGUiXSwiaWF0IjoxNzY0NTAxNjQwLCJuYmYiOjE3NjQ1MDE2NDB9.7WEKQMZb3hze3Gz5X9mvrTtJDLngpbhnIh6h6xigcPs
+
+// Get user
+GET https://localhost:20031/me
+Authorization: Bearer {{token}}
+
+###

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 18
-VisualStudioVersion = 18.0.11205.157
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36705.20 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{39AE0D3F-2177-88F2-3A7D-0C2ABC431B83}"
 EndProject
@@ -17,10 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{02EA681E-C7D
 	ProjectSection(SolutionItems) = preProject
 		db-ops.txt = db-ops.txt
 		Http\requestsAddresses.http = Http\requestsAddresses.http
+		Http\requestsAuth.http = Http\requestsAuth.http
 		Http\requestsCustomers.http = Http\requestsCustomers.http
 		Http\requestsDocuments.http = Http\requestsDocuments.http
 		Http\requestsInstitutions.http = Http\requestsInstitutions.http
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth", "Auth\Auth.csproj", "{334F3B23-EFE8-6F1A-5E5F-9A2275D56E28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +51,10 @@ Global
 		{786D7549-BFA3-42F0-AD92-BDA1FE394907}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{786D7549-BFA3-42F0-AD92-BDA1FE394907}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{786D7549-BFA3-42F0-AD92-BDA1FE394907}.Release|Any CPU.Build.0 = Release|Any CPU
+		{334F3B23-EFE8-6F1A-5E5F-9A2275D56E28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{334F3B23-EFE8-6F1A-5E5F-9A2275D56E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{334F3B23-EFE8-6F1A-5E5F-9A2275D56E28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{334F3B23-EFE8-6F1A-5E5F-9A2275D56E28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,7 +13,7 @@ builder.AddServiceDefaults();
 
 builder.AddAzureServiceBusClient(aspireServiceBusName);
 
-var sqlCacheConn = builder.Configuration.GetConnectionString("Cache");
+var sqlCacheConn = builder.Configuration.GetConnectionString("CacheDb");
 if (string.IsNullOrEmpty(sqlCacheConn))
 {
     throw new InvalidOperationException("Cache connection string is not configured.");
@@ -23,7 +23,7 @@ builder.AddCache(sqlCacheConn);
 
 builder.Services.AddDbContext<FrontendDataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Frontend"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("FrontendDb"));
 });
 builder.EnrichSqlServerDbContext<FrontendDataContext>();
 
