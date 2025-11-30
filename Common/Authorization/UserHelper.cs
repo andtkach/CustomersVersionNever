@@ -6,7 +6,8 @@ public class UserHelper(IHttpContextAccessor httpContextAccessor)
 {
     public string GetUserCompany()
     {
-        return httpContextAccessor.HttpContext?.User?.FindFirst("company")?.Value ?? "";
+        var company = httpContextAccessor.HttpContext?.User?.FindFirst("company")?.Value ?? "";
+        return company;
     }
 
     public string GetCompanyHeader()

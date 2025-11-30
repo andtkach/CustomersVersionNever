@@ -58,7 +58,7 @@ public static class Extensions
         {
             adminUser = new ApplicationUser
             {
-                UserName = "admin@email.com", Email = "admin@email.com", Company = "Admin Corp"
+                UserName = "admin@email.com", Email = "admin@email.com", Company = "ADMIN"
             };
 
             var result = await userManager.CreateAsync(adminUser, "Admin123!");
