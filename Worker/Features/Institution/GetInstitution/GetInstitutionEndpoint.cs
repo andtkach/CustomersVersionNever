@@ -24,11 +24,11 @@ internal static class GetInstitutionEndpoint
             var company = userHelper.GetCompanyHeader();
             
             var institution = !shouldIncludeCustomers
-                ? await context.Institutions.Where(i => i.Company == company)
-                    .FirstOrDefaultAsync(i => i.Id == institutionId)
-                : await context.Institutions.Where(i => i.Company == company)
+                ? await context.Institutions
+                    .FirstOrDefaultAsync(i => i.Id == institutionId && i.Company == company)
+                : await context.Institutions
                     .Include(i => i.Customers)
-                    .FirstOrDefaultAsync(i => i.Id == institutionId);
+                    .FirstOrDefaultAsync(i => i.Id == institutionId && i.Company == company);
 
             if (institution == null)
             {

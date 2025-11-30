@@ -1,5 +1,6 @@
 ﻿using Api.Abstractions;
 using Api.Data;
+using Api.Features.Institution.Services;
 using Azure.Messaging.ServiceBus;
 using Common.Authorization;
 using Common.Requests.Institution;
@@ -21,13 +22,15 @@ namespace Api.Features.Institution.CreateInstitution
             [FromServices] ServiceBusClient serviceBusClient,
             [FromServices] IHttpClientFactory httpClientFactory,
             [FromServices] ILogger<Program> logger,
-            [FromServices] UserHelper userHelper)
+            [FromServices] UserHelper userHelper,
+            [FromServices] IInstitutionCacheService cacheService)
         {
             var institutionId = Guid.CreateVersion7();
             var command = new CreateInstitutionCommand(institutionId, request.Name, request.Description);
             var response = new Response(institutionId, request.Name, request.Description);
             var company = userHelper.GetUserCompany();
 
+            await cacheService.Invalidate(institutionId);
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,

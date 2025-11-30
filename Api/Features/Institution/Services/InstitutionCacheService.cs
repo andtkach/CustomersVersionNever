@@ -80,6 +80,14 @@ public sealed class InstitutionCacheService : IInstitutionCacheService
             CacheOptions);
     }
 
+    public async Task Invalidate(Guid id)
+    {
+        await _cache.RemoveAsync($"{InstitutionCacheKeyPrefix}{id}{_userHelper.GetCompanyForCache()}");
+        await _cache.RemoveAsync($"{InstitutionWithCustomersCacheKeyPrefix}{id}{_userHelper.GetCompanyForCache()}");
+        await _cache.RemoveAsync($"{InstitutionListCacheKey}{_userHelper.GetCompanyForCache()}");
+        await _cache.RemoveAsync($"{InstitutionListWithCustomersCacheKey}{_userHelper.GetCompanyForCache()}");
+    }
+
     private async Task<InstitutionDto?> GetInstitutionFromWorkerAsync(Guid id)
     {
         try

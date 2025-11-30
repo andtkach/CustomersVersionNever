@@ -1,5 +1,6 @@
 ﻿using Api.Abstractions;
 using Api.Data;
+using Api.Features.Institution.Services;
 using Azure.Messaging.ServiceBus;
 using Common.Authorization;
 using Common.Requests.Institution;
@@ -20,11 +21,13 @@ namespace Api.Features.Institution.PatchInstitution
             ServiceBusClient serviceBusClient,
             IHttpClientFactory httpClientFactory,
             ILogger<Program> logger,
-            [FromServices] UserHelper userHelper)
+            [FromServices] UserHelper userHelper,
+            [FromServices] IInstitutionCacheService cacheService)
         {
             var command = new PatchInstitutionCommand(institutionId, request.Name, request.Description);
             var company = userHelper.GetUserCompany();
-            
+
+            await cacheService.Invalidate(institutionId);
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,

@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Http;
+using System.Text.RegularExpressions;
 
 namespace Common.Authorization;
 
@@ -23,11 +24,24 @@ public class UserHelper(IHttpContextAccessor httpContextAccessor)
     public string GetCompanyForCache()
     {
         var company = this.GetUserCompany();
-        return "-" + company.ToLower().Replace(" ", "");
+        return "-" + this.NormalizeString(company);
     }
 
     public string NormaliseCompanyForCache(string company)
     {
-        return "-" + company.ToLower().Replace(" ", "");
+        return "-" + this.NormalizeString(company);
+    }
+
+    private string NormalizeString(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            throw new ArgumentNullException(nameof(input));
+        }
+
+        var trimmedInput = input.Trim();
+        var lowerCaseInput = trimmedInput.ToLower();
+        var cleanedInput = Regex.Replace(lowerCaseInput, "[^a-z]", "");
+        return cleanedInput;
     }
 }
