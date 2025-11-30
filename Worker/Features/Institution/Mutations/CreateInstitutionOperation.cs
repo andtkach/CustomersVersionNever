@@ -23,6 +23,7 @@ public class CreateInstitutionOperation(IInstitutionCacheService cacheService) :
             Id = payload.Id,
             Name = payload.Name,
             Description = payload.Description,
+            Company = intent.Company
         };
 
         await backendDataContext.Institutions.AddAsync(newInstitution);

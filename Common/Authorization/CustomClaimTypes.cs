@@ -1,4 +1,4 @@
-﻿namespace Auth.Authorization;
+﻿namespace Common.Authorization;
 
 public static class CustomClaimTypes
 {

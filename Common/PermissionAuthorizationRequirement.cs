@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Common.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Auth.Authorization;
+namespace Common;
 
 public class PermissionAuthorizationRequirement(params string[] allowedPermissions)
     : AuthorizationHandler<PermissionAuthorizationRequirement>, IAuthorizationRequirement

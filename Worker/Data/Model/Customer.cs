@@ -9,4 +9,5 @@ public class Customer
     public Institution Institution { get; set; } = null!;
     public List<Document> Documents { get; set; } = new();
     public List<Address> Addresses { get; set; } = new();
+    public string Company { get; set; } = string.Empty;
 }

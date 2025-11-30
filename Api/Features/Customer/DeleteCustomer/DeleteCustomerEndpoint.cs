@@ -1,8 +1,9 @@
-﻿using Azure.Messaging.ServiceBus;
-using Microsoft.AspNetCore.Mvc;
+﻿using Api.Abstractions;
 using Api.Data;
-using Api.Abstractions;
+using Azure.Messaging.ServiceBus;
+using Common.Authorization;
 using Common.Requests.Customer;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Features.Customer.DeleteCustomer
 {
@@ -15,14 +16,17 @@ namespace Api.Features.Customer.DeleteCustomer
             FrontendDataContext dbContext,
             ServiceBusClient serviceBusClient,
             IHttpClientFactory httpClientFactory,
-            ILogger<Program> logger)
+            ILogger<Program> logger,
+            [FromServices] UserHelper userHelper)
         {
             var command = new DeleteCustomerCommand(customerId);
+            var company = userHelper.GetUserCompany();
             
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,
                 serviceBusClient,
+                company,
                 "Customer",
                 "Customers",
                 logger,

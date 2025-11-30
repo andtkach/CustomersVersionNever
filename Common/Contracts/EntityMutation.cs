@@ -1,3 +1,3 @@
 ﻿namespace Common.Contracts;
 
-public sealed record EntityMutation(Guid IntentId, string Action);
+public sealed record EntityMutation(Guid IntentId, string Company, string Action);

@@ -16,6 +16,7 @@ namespace Api.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Company = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Action = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Entity = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Payload = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -27,6 +28,11 @@ namespace Api.Data.Migrations
                 {
                     table.PrimaryKey("PK_Intents", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Intents_Company",
+                table: "Intents",
+                column: "Company");
         }
 
         /// <inheritdoc />

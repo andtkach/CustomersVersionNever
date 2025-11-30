@@ -21,6 +21,7 @@ public sealed class BaseCommandHandler<TCommand, TPayload>
         TCommand command,
         FrontendDataContext dbContext,
         ServiceBusClient serviceBusClient,
+        string company,
         string entityName,
         string queueName,
         ILogger logger,
@@ -33,6 +34,7 @@ public sealed class BaseCommandHandler<TCommand, TPayload>
             var intent = new Intent
             {
                 Id = Guid.CreateVersion7(),
+                Company = company,
                 Action = command.Action,
                 Entity = entityName,
                 Payload = JsonSerializer.Serialize(payload),
@@ -44,7 +46,7 @@ public sealed class BaseCommandHandler<TCommand, TPayload>
             await dbContext.SaveChangesAsync();
 
             await using var sender = serviceBusClient.CreateSender(queueName);
-            var mutation = new EntityMutation(intent.Id, intent.Action);
+            var mutation = new EntityMutation(intent.Id, company, intent.Action);
             await sender.SendMessageAsync(new ServiceBusMessage(JsonSerializer.Serialize(mutation)));
 
             return onSuccess();

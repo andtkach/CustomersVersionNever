@@ -3,6 +3,7 @@
 public class Intent
 {
     public Guid Id { get; set; }
+    public string Company { get; set; } = string.Empty;
     public string Action { get; set; } = string.Empty;
     public string Entity { get; set; } = string.Empty;
     public string Payload { get; set; } = string.Empty;

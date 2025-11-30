@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
-using Auth.Authorization;
+using Common.Authorization;
+using PermissionExtensions = Common.PermissionExtensions;
 
 namespace Auth.Features;
 
@@ -19,6 +20,6 @@ public static class InfoUser
                     c => c.Key,
                     c => string.Join(',', c.Select(cc => cc.Value))));
         })
-        .RequireAuthorization(policy => policy.RequirePermission(Permissions.UsersRead));
+        .RequireAuthorization(policy => PermissionExtensions.RequirePermission(policy, Permissions.DataRead));
     }
 }

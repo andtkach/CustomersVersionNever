@@ -1,8 +1,9 @@
-﻿using Azure.Messaging.ServiceBus;
-using Microsoft.AspNetCore.Mvc;
+﻿using Api.Abstractions;
 using Api.Data;
-using Api.Abstractions;
+using Azure.Messaging.ServiceBus;
+using Common.Authorization;
 using Common.Requests.Institution;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Features.Institution.UpdateInstitution
 {
@@ -18,14 +19,17 @@ namespace Api.Features.Institution.UpdateInstitution
             FrontendDataContext dbContext,
             ServiceBusClient serviceBusClient,
             IHttpClientFactory httpClientFactory,
-            ILogger<Program> logger)
+            ILogger<Program> logger,
+            [FromServices] UserHelper userHelper)
         {
             var command = new UpdateInstitutionCommand(institutionId, request.Name, request.Description);
+            var company = userHelper.GetUserCompany();
             
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,
                 serviceBusClient,
+                company,
                 "Institution",
                 "Institutions",
                 logger,

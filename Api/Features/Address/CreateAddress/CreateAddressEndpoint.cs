@@ -1,8 +1,9 @@
-﻿using Azure.Messaging.ServiceBus;
-using Microsoft.AspNetCore.Mvc;
+﻿using Api.Abstractions;
 using Api.Data;
-using Api.Abstractions;
+using Azure.Messaging.ServiceBus;
+using Common.Authorization;
 using Common.Requests.Address;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Features.Address.CreateAddress
 {
@@ -18,16 +19,19 @@ namespace Api.Features.Address.CreateAddress
             FrontendDataContext dbContext,
             ServiceBusClient serviceBusClient,
             IHttpClientFactory httpClientFactory,
-            ILogger<Program> logger)
+            ILogger<Program> logger,
+            [FromServices] UserHelper userHelper)
         {
             var addressId = Guid.CreateVersion7();
             var command = new CreateAddressCommand(addressId, request.CustomerId, request.Country, request.City, request.Street, request.Current);
             var response = new Response(addressId, request.CustomerId, request.Country, request.City, request.Street, request.Current);
+            var company = userHelper.GetUserCompany();
             
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,
                 serviceBusClient,
+                company,
                 "Address",
                 "Addresses",
                 logger,

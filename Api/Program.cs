@@ -1,7 +1,12 @@
-using Microsoft.EntityFrameworkCore;
 using Api.Data;
 using Api.Features;
+using Common.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ServiceDefaults;
+using System.Security.Claims;
+using System.Text;
 
 AppContext.SetSwitch("Azure.Experimental.EnableActivitySource", true);
 
@@ -32,12 +37,39 @@ builder.Services.AddHttpClient("WorkerApi", client =>
     client.BaseAddress = new Uri("http://worker");
 });
 
+builder.Services.AddScoped<UserHelper>();
 builder.Services.AddScoped<Api.Features.Institution.Services.IInstitutionCacheService, Api.Features.Institution.Services.InstitutionCacheService>();
 builder.Services.AddScoped<Api.Features.Customer.Services.ICustomerCacheService, Api.Features.Customer.Services.CustomerCacheService>();
 builder.Services.AddScoped<Api.Features.Document.Services.IDocumentCacheService, Api.Features.Document.Services.DocumentCacheService>();
 builder.Services.AddScoped<Api.Features.Address.Services.IAddressCacheService, Api.Features.Address.Services.AddressCacheService>();
 
 builder.Services.AddOpenApi();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
+            NameClaimType = ClaimTypes.Name,
+            RoleClaimType = ClaimTypes.Role
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -52,6 +84,9 @@ if (app.Environment.IsDevelopment())
     await dbContext.Database.MigrateAsync();
 }
 
+app.UseAuthorization();
+
 app.UseHttpsRedirection();
 app.MapInstitutionsEndpoints();
 await app.RunAsync();
+

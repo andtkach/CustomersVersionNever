@@ -17,7 +17,8 @@ namespace Worker.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    Company = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,7 +32,8 @@ namespace Worker.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    InstitutionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    InstitutionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Company = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,7 +55,8 @@ namespace Worker.Data.Migrations
                     City = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Street = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Current = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Company = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,7 +77,8 @@ namespace Worker.Data.Migrations
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Content = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Company = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,9 +92,19 @@ namespace Worker.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Addresses_Company",
+                table: "Addresses",
+                column: "Company");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Addresses_CustomerId",
                 table: "Addresses",
                 column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_Company",
+                table: "Customers",
+                column: "Company");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_InstitutionId",
@@ -98,9 +112,19 @@ namespace Worker.Data.Migrations
                 column: "InstitutionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Documents_Company",
+                table: "Documents",
+                column: "Company");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Documents_CustomerId",
                 table: "Documents",
                 column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Institutions_Company",
+                table: "Institutions",
+                column: "Company");
         }
 
         /// <inheritdoc />

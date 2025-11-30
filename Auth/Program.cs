@@ -3,6 +3,7 @@ using System.Text;
 using Auth.Authorization;
 using Auth.Data;
 using Auth.Features;
+using Common.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -51,7 +52,7 @@ builder.Services
             RoleClaimType = ClaimTypes.Role
         };
         
-        options.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
+        options.Events = new JwtBearerEvents
         {
             OnChallenge = context =>
             {
@@ -78,9 +79,7 @@ builder.Services
                 var logger = context.HttpContext.RequestServices
                     .GetRequiredService<ILogger<Program>>();
                 
-                // Handle array claims - when JWT has multiple claims of same type as array
-                var identity = context.Principal!.Identity as ClaimsIdentity;
-                if (identity != null)
+                if (context.Principal!.Identity is ClaimsIdentity identity)
                 {
                     var permissionClaim = identity.FindFirst("permission");
                     if (permissionClaim != null && permissionClaim.Value.StartsWith('['))
@@ -125,6 +124,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     await app.ApplyMigrations();
     await app.SeedRolesAndPermissions();
+    await app.SeedAdminUser();
 }
 
 app.UseHttpsRedirection();

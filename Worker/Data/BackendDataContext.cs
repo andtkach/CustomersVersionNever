@@ -24,6 +24,9 @@ public class BackendDataContext(DbContextOptions<BackendDataContext> options) : 
                 .WithOne(c => c.Institution)
                 .HasForeignKey(c => c.InstitutionId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(e => e.Company).IsRequired().HasMaxLength(100);
+            entity.HasIndex(e => e.Company).HasDatabaseName("IX_Institutions_Company");
         });
 
         modelBuilder.Entity<Customer>(entity =>
@@ -36,6 +39,9 @@ public class BackendDataContext(DbContextOptions<BackendDataContext> options) : 
 
             entity.Property<Guid>(e => e.InstitutionId).IsRequired();
             entity.HasIndex(e => e.InstitutionId).HasDatabaseName("IX_Customers_InstitutionId");
+
+            entity.Property(e => e.Company).IsRequired().HasMaxLength(100);
+            entity.HasIndex(e => e.Company).HasDatabaseName("IX_Customers_Company");
         });
 
         modelBuilder.Entity<Document>(entity =>
@@ -50,6 +56,9 @@ public class BackendDataContext(DbContextOptions<BackendDataContext> options) : 
             
             entity.Property<Guid>(e => e.CustomerId).IsRequired();
             entity.HasIndex(e => e.CustomerId).HasDatabaseName("IX_Documents_CustomerId");
+
+            entity.Property(e => e.Company).IsRequired().HasMaxLength(100);
+            entity.HasIndex(e => e.Company).HasDatabaseName("IX_Documents_Company");
         });
 
         modelBuilder.Entity<Address>(entity =>
@@ -65,6 +74,9 @@ public class BackendDataContext(DbContextOptions<BackendDataContext> options) : 
 
             entity.Property<Guid>(e => e.CustomerId).IsRequired();
             entity.HasIndex(e => e.CustomerId).HasDatabaseName("IX_Addresses_CustomerId");
+
+            entity.Property(e => e.Company).IsRequired().HasMaxLength(100);
+            entity.HasIndex(e => e.Company).HasDatabaseName("IX_Addresses_Company");
         });
     }
 }

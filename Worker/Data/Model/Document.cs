@@ -8,4 +8,5 @@ public class Document
     public bool Active { get; set; }
     public Guid CustomerId { get; set; }
     public Customer Customer { get; set; } = null!;
+    public string Company { get; set; } = string.Empty;
 }

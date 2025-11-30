@@ -1,8 +1,14 @@
 // Institutions
 
+@tokenUser = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjdXN0b21lcnMuYXBpIiwiaXNzIjoiaHR0cHM6Ly9hdXRoLmN1c3RvbWVycy5hcGkiLCJleHAiOjE3NjQ1MDUyNjYsInN1YiI6IjFkNzIwYTI0LTQ5YjQtNGUyYy1iZTVmLWJmNzBjZjk0NmNmOSIsImVtYWlsIjoidXNlcjFAZW1haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTWVtYmVyIiwicGVybWlzc2lvbiI6ImRhdGE6cmVhZCIsImlhdCI6MTc2NDUwNDY2NiwibmJmIjoxNzY0NTA0NjY2fQ._NsfVlHxW2Ul46OfVjDxA3afjl0-6mx_22D8VvfyOVI
+
+@tokenAdmin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjdXN0b21lcnMuYXBpIiwiaXNzIjoiaHR0cHM6Ly9hdXRoLmN1c3RvbWVycy5hcGkiLCJleHAiOjE3NjQ1MDk4MzUsInN1YiI6IjFlNmE3NGM0LWZiNzItNDEwZS1hNDdkLWZkMzRiNTM5MTBjZiIsImVtYWlsIjoiYWRtaW5AZW1haWwuY29tIiwiY29tcGFueSI6IkFkbWluIENvcnAiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsInBlcm1pc3Npb24iOlsiZGF0YTpyZWFkIiwiZGF0YTpyZW1vdmUiLCJkYXRhOndyaXRlIl0sImlhdCI6MTc2NDUwOTIzNSwibmJmIjoxNzY0NTA5MjM1fQ.2pJ3UvBSbclJWQB0wAMCwU_NAqRhOOovorOuDNfuPtE
+
+
 // Create institution
 POST https://localhost:20011/institutions
 Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
 
 {
     "name": "Institution1",
@@ -18,7 +24,7 @@ GET https://localhost:20011/institutions/019a8771-fcfe-7663-b1c6-75703a3f771b
 
 // Get institutions
 GET https://localhost:20011/institutions
-
+Authorization: Bearer {{tokenAdmin}}
 
 ###
 

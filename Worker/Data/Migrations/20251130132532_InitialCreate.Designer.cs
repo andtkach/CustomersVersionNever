@@ -12,7 +12,7 @@ using Worker.Data;
 namespace Worker.Data.Migrations
 {
     [DbContext(typeof(BackendDataContext))]
-    [Migration("20251115092059_InitialCreate")]
+    [Migration("20251130132532_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,6 +35,11 @@ namespace Worker.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("Company")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -55,6 +60,9 @@ namespace Worker.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Company")
+                        .HasDatabaseName("IX_Addresses_Company");
+
                     b.HasIndex("CustomerId")
                         .HasDatabaseName("IX_Addresses_CustomerId");
 
@@ -65,6 +73,11 @@ namespace Worker.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Company")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -80,6 +93,9 @@ namespace Worker.Data.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Company")
+                        .HasDatabaseName("IX_Customers_Company");
 
                     b.HasIndex("InstitutionId")
                         .HasDatabaseName("IX_Customers_InstitutionId");
@@ -97,6 +113,11 @@ namespace Worker.Data.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
+                    b.Property<string>("Company")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -112,6 +133,9 @@ namespace Worker.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Company")
+                        .HasDatabaseName("IX_Documents_Company");
+
                     b.HasIndex("CustomerId")
                         .HasDatabaseName("IX_Documents_CustomerId");
 
@@ -122,6 +146,11 @@ namespace Worker.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Company")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -134,6 +163,9 @@ namespace Worker.Data.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Company")
+                        .HasDatabaseName("IX_Institutions_Company");
 
                     b.ToTable("Institutions");
                 });

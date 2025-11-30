@@ -1,7 +1,7 @@
+using Common.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Worker.Data;
-using Worker.Data.Model;
 
 namespace Worker.Features.Institution.GetInstitutions;
 
@@ -14,14 +14,16 @@ internal static class GetInstitutionsEndpoint
     public static async Task<IResult> GetInstitutionsAsync(
         [FromQuery] bool? includeCustomers,
         BackendDataContext context,
-        ILogger<Program> logger)
+        ILogger<Program> logger,
+        UserHelper userHelper)
     {
         try
         {
             var shouldIncludeCustomers = includeCustomers ?? false;
+            var company = userHelper.GetCompanyHeader();
 
             return shouldIncludeCustomers
-                ? Results.Ok(await context.Institutions
+                ? Results.Ok(await context.Institutions.Where(i => i.Company == company)
                     .Include(i => i.Customers)
                     .OrderBy(i => i.Name)
                     .Select(i => 
@@ -32,7 +34,7 @@ internal static class GetInstitutionsEndpoint
                             i.Customers.Select(c => 
                                 new CustomerResponse(c.Id, c.FirstName, c.LastName)).ToList()))
                     .ToListAsync())
-                : Results.Ok(await context.Institutions
+                : Results.Ok(await context.Institutions.Where(i => i.Company == company)
                     .OrderBy(i => i.Name)
                     .Select(i => 
                         new InstitutionResponse(

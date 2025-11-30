@@ -1,12 +1,13 @@
+using Common.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ServiceDefaults;
-using Worker.Data;
 using Worker.Cache;
+using Worker.Data;
 using Worker.Features;
+using Worker.Features.Address;
 using Worker.Features.Customer;
 using Worker.Features.Document;
 using Worker.Features.Institution;
-using Worker.Features.Address;
 
 AppContext.SetSwitch("Azure.Experimental.EnableActivitySource", true);
 
@@ -25,6 +26,9 @@ if (string.IsNullOrEmpty(sqlCacheConn))
 }
 
 builder.AddCache(sqlCacheConn);
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<UserHelper>();
 
 builder.Services.AddHostedService<InstitutionProcessor>();
 builder.Services.AddHostedService<CustomerProcessor>();

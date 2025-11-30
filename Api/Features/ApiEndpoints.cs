@@ -22,6 +22,7 @@ using Api.Features.Address.GetAddresses;
 using Api.Features.Address.GetAddress;
 using Api.Features.Address.PatchAddress;
 using Api.Features.Address.UpdateAddress;
+using Common.Authorization;
 
 namespace Api.Features;
 
@@ -29,12 +30,18 @@ public static class ApiEndpoints
 {
     public static IEndpointRouteBuilder MapInstitutionsEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/institutions", CreateInstitutionEndpoint.CreateInstitutionAsync);
-        app.MapPut("/institutions/{institutionId:guid}", UpdateInstitutionEndpoint.UpdateInstitutionAsync);
-        app.MapPatch("/institutions/{institutionId:guid}", PatchInstitutionEndpoint.PatchInstitutionAsync);
-        app.MapDelete("/institutions/{institutionId:guid}", DeleteInstitutionEndpoint.DeleteInstitutionAsync);
-        app.MapGet("/institutions/{institutionId:guid}", GetInstitutionEndpoint.GetInstitutionAsync);
-        app.MapGet("/institutions", GetInstitutionsEndpoint.GetInstitutionsAsync);
+        app.MapPost("/institutions", CreateInstitutionEndpoint.CreateInstitutionAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapPut("/institutions/{institutionId:guid}", UpdateInstitutionEndpoint.UpdateInstitutionAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapPatch("/institutions/{institutionId:guid}", PatchInstitutionEndpoint.PatchInstitutionAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapDelete("/institutions/{institutionId:guid}", DeleteInstitutionEndpoint.DeleteInstitutionAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRemove));
+        app.MapGet("/institutions/{institutionId:guid}", GetInstitutionEndpoint.GetInstitutionAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRead));
+        app.MapGet("/institutions", GetInstitutionsEndpoint.GetInstitutionsAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRead));
 
         app.MapPost("/customers", CreateCustomerEndpoint.CreateCustomerAsync);
         app.MapPut("/customers/{customerId:guid}", UpdateCustomerEndpoint.UpdateCustomerAsync);

@@ -2,6 +2,7 @@
 using System.Text;
 using Auth.Authorization;
 using Auth.Data;
+using Common.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -50,6 +51,7 @@ public static class LoginUser
             [
                 new(JwtRegisteredClaimNames.Sub, user.Id),
                 new(JwtRegisteredClaimNames.Email, user.Email!),
+                new("company", user.Company),
                 ..roles.Select(r => new Claim(ClaimTypes.Role, r)),
                 ..permissions.Select(p => new Claim(CustomClaimTypes.Permission, p))
             ];

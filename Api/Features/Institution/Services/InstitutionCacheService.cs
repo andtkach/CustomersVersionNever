@@ -1,3 +1,4 @@
+using Common.Authorization;
 using Common.Dto;
 using Microsoft.Extensions.Caching.Hybrid;
 
@@ -8,7 +9,8 @@ public sealed class InstitutionCacheService : IInstitutionCacheService
     private readonly HybridCache _cache;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<InstitutionCacheService> _logger;
-    
+    private readonly UserHelper _userHelper;
+
     private const string InstitutionCacheKeyPrefix = "institution-";
     private const string InstitutionWithCustomersCacheKeyPrefix = "institution-with-customers-";
     private const string InstitutionListCacheKey = "institutions-list";
@@ -23,11 +25,13 @@ public sealed class InstitutionCacheService : IInstitutionCacheService
     public InstitutionCacheService(
         HybridCache cache, 
         IHttpClientFactory httpClientFactory,
-        ILogger<InstitutionCacheService> logger)
+        ILogger<InstitutionCacheService> logger,
+        UserHelper userHelper)
     {
         _cache = cache;
         _httpClientFactory = httpClientFactory;
         _logger = logger;
+        _userHelper = userHelper;
     }
 
     public async Task<InstitutionDto?> GetInstitutionAsync(Guid id)
@@ -79,6 +83,9 @@ public sealed class InstitutionCacheService : IInstitutionCacheService
         try
         {
             var httpClient = _httpClientFactory.CreateClient("WorkerApi");
+            var userCompanyId = _userHelper.GetUserCompany();
+            httpClient.DefaultRequestHeaders.Add("company", userCompanyId);
+            
             var response = await httpClient.GetAsync($"institutions/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -110,6 +117,9 @@ public sealed class InstitutionCacheService : IInstitutionCacheService
         try
         {
             var httpClient = _httpClientFactory.CreateClient("WorkerApi");
+            var userCompanyId = _userHelper.GetUserCompany();
+            httpClient.DefaultRequestHeaders.Add("company", userCompanyId);
+            
             var response = await httpClient.GetAsync("institutions");
 
             if (response.IsSuccessStatusCode)
@@ -135,6 +145,9 @@ public sealed class InstitutionCacheService : IInstitutionCacheService
         try
         {
             var httpClient = _httpClientFactory.CreateClient("WorkerApi");
+            var userCompanyId = _userHelper.GetUserCompany();
+            httpClient.DefaultRequestHeaders.Add("company", userCompanyId);
+            
             var response = await httpClient.GetAsync("institutions?includeCustomers=true");
 
             if (response.IsSuccessStatusCode)
@@ -160,6 +173,9 @@ public sealed class InstitutionCacheService : IInstitutionCacheService
         try
         {
             var httpClient = _httpClientFactory.CreateClient("WorkerApi");
+            var userCompanyId = _userHelper.GetUserCompany();
+            httpClient.DefaultRequestHeaders.Add("company", userCompanyId);
+            
             var response = await httpClient.GetAsync($"institutions/{id}?includeCustomers=true");
 
             if (response.IsSuccessStatusCode)
