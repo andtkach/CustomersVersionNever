@@ -27,7 +27,7 @@ public class CreateInstitutionOperation(IInstitutionCacheService cacheService) :
         };
 
         await backendDataContext.Institutions.AddAsync(newInstitution);
-        await cacheService.CacheInstitutionAsync(newInstitution);
-        await cacheService.ClearInstitutionListsAsync();
+        await cacheService.CacheInstitutionAsync(newInstitution, intent.Company);
+        await cacheService.ClearInstitutionListsAsync(intent.Company);
     }
 }

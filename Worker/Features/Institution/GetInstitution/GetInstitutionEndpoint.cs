@@ -1,3 +1,4 @@
+using Common.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Worker.Data;
@@ -14,15 +15,18 @@ internal static class GetInstitutionEndpoint
         [FromRoute] Guid institutionId,
         [FromQuery] bool? includeCustomers,
         BackendDataContext context,
-        ILogger<Program> logger)
+        ILogger<Program> logger,
+        UserHelper userHelper)
     {
         try
         {
             bool shouldIncludeCustomers = includeCustomers ?? false;
-
+            var company = userHelper.GetCompanyHeader();
+            
             var institution = !shouldIncludeCustomers
-                ? await context.Institutions.FindAsync(institutionId)
-                : await context.Institutions
+                ? await context.Institutions.Where(i => i.Company == company)
+                    .FirstOrDefaultAsync(i => i.Id == institutionId)
+                : await context.Institutions.Where(i => i.Company == company)
                     .Include(i => i.Customers)
                     .FirstOrDefaultAsync(i => i.Id == institutionId);
 

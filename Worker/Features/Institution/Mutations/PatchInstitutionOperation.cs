@@ -21,10 +21,13 @@ public class PatchInstitutionOperation(IInstitutionCacheService cacheService) : 
         var existingInstitution = await backendDataContext.Institutions.FindAsync(payload.Id)
             ?? throw new InvalidOperationException($"Unable to find institution with id {payload.Id}");
 
+        if (!existingInstitution.Company.Equals(intent.Company))
+            throw new InvalidOperationException($"Unable to patch institution with id {payload.Id} by {intent.Company}");
+        
         existingInstitution.Name = payload.Name ?? existingInstitution.Name;
         existingInstitution.Description = payload.Description ?? existingInstitution.Description;
 
-        await cacheService.CacheInstitutionAsync(existingInstitution);
-        await cacheService.ClearInstitutionListsAsync();
+        await cacheService.CacheInstitutionAsync(existingInstitution, intent.Company);
+        await cacheService.ClearInstitutionListsAsync(intent.Company);
     }
 }

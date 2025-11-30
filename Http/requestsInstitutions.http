@@ -1,8 +1,8 @@
 // Institutions
 
-@tokenUser = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjdXN0b21lcnMuYXBpIiwiaXNzIjoiaHR0cHM6Ly9hdXRoLmN1c3RvbWVycy5hcGkiLCJleHAiOjE3NjQ1MTIzNjAsInN1YiI6IjI3YWZkNzg0LThiYzYtNDlhMC04Njk1LWM0YTRjZDcwOGY0NiIsImVtYWlsIjoidXNlcjFAZW1haWwuY29tIiwiY29tcGFueSI6IkNvbXBhbnkgMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6Ik1lbWJlciIsInBlcm1pc3Npb24iOiJkYXRhOnJlYWQiLCJpYXQiOjE3NjQ1MTE3NjAsIm5iZiI6MTc2NDUxMTc2MH0.ORwTWuLOEOrYDtW3DWeOa-hMvhFRC3p2NpcTA5U38y8
+@tokenUser = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjdXN0b21lcnMuYXBpIiwiaXNzIjoiaHR0cHM6Ly9hdXRoLmN1c3RvbWVycy5hcGkiLCJleHAiOjE3NjQ1MTMxMTksInN1YiI6IjI3YWZkNzg0LThiYzYtNDlhMC04Njk1LWM0YTRjZDcwOGY0NiIsImVtYWlsIjoidXNlcjFAZW1haWwuY29tIiwiY29tcGFueSI6IkNvbXBhbnkgMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6Ik1lbWJlciIsInBlcm1pc3Npb24iOiJkYXRhOnJlYWQiLCJpYXQiOjE3NjQ1MTI1MTksIm5iZiI6MTc2NDUxMjUxOX0.Z_ueZZTk6AOjw_5Q3Jpubo4FLPb5MmIx3hgMhO39xUw
 
-@tokenAdmin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjdXN0b21lcnMuYXBpIiwiaXNzIjoiaHR0cHM6Ly9hdXRoLmN1c3RvbWVycy5hcGkiLCJleHAiOjE3NjQ1MTE5MTEsInN1YiI6IjZjNDgyNzIxLTAyMjctNGIzMC1iNjE1LWU4Y2E0OTc4Zjg1NyIsImVtYWlsIjoiYWRtaW5AZW1haWwuY29tIiwiY29tcGFueSI6IkFkbWluIENvcnAiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsInBlcm1pc3Npb24iOlsiZGF0YTpyZWFkIiwiZGF0YTpyZW1vdmUiLCJkYXRhOndyaXRlIl0sImlhdCI6MTc2NDUxMTMxMSwibmJmIjoxNzY0NTExMzExfQ.yS7V1bPuNyNpiYI7mButRgFGXTQDovDUBao731vpCwQ
+@tokenAdmin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjdXN0b21lcnMuYXBpIiwiaXNzIjoiaHR0cHM6Ly9hdXRoLmN1c3RvbWVycy5hcGkiLCJleHAiOjE3NjQ1MTQ3ODgsInN1YiI6IjZjNDgyNzIxLTAyMjctNGIzMC1iNjE1LWU4Y2E0OTc4Zjg1NyIsImVtYWlsIjoiYWRtaW5AZW1haWwuY29tIiwiY29tcGFueSI6IkFkbWluIENvcnAiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsInBlcm1pc3Npb24iOlsiZGF0YTpyZWFkIiwiZGF0YTpyZW1vdmUiLCJkYXRhOndyaXRlIl0sImlhdCI6MTc2NDUxNDE4OCwibmJmIjoxNzY0NTE0MTg4fQ.SmPBXmg43MLIx2UKDC3_q9sEV27p7_mYkmGJTE4EVhc
 
 
 // Create institution
@@ -11,37 +11,41 @@ Content-Type: application/json
 Authorization: Bearer {{tokenAdmin}}
 
 {
-    "name": "Institution1",
-    "description": "Demo institution 1"
+    "name": "Institution3",
+    "description": "Demo institution 3"
 }
 
 ###
 
 // Get institution
-GET https://localhost:20011/institutions/019ad512-4abc-747f-bc48-3eb1a9206dd3
+GET https://localhost:20011/institutions/019ad547-3f11-77d7-8a33-422e33626865
 Authorization: Bearer {{tokenUser}}
 
 ###
 
 // Get institutions
 GET https://localhost:20011/institutions
-Authorization: Bearer {{tokenAdmin}}
+#Authorization: Bearer {{tokenAdmin}}
+Authorization: Bearer {{tokenUser}}
 
 ###
 
 // Get institution with customers
-GET https://localhost:20011/institutions/019a8771-fcfe-7663-b1c6-75703a3f771b?includeCustomers=true
+GET https://localhost:20011/institutions/019ad512-4abc-747f-bc48-3eb1a9206dd3?includeCustomers=true
+Authorization: Bearer {{tokenUser}}
 
 ###
 
 // Get institutions with customers
 GET https://localhost:20011/institutions?includeCustomers=true
+Authorization: Bearer {{tokenUser}}
 
 ###
 
 // update institution
 PUT https://localhost:20011/institutions/019a86a3-4c73-73cb-bc5e-eba5d34f920d
 Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
 
 {
     "name": "Institution1 updated",
@@ -53,6 +57,7 @@ Content-Type: application/json
 // patch institution
 PATCH https://localhost:20011/institutions/019a86a3-4c73-73cb-bc5e-eba5d34f920d
 Content-Type: application/json
+Authorization: Bearer {{tokenAdmin}}
 
 {
     "name": "Institution1 patched"
@@ -61,5 +66,6 @@ Content-Type: application/json
 
 // delete institution
 DELETE https://localhost:20011/institutions/019a83f6-1881-703a-8c8a-a669848ddbe1
+Authorization: Bearer {{tokenAdmin}}
 
 ###

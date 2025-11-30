@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Http;
 
 namespace Common.Authorization;
 
@@ -17,5 +18,16 @@ public class UserHelper(IHttpContextAccessor httpContextAccessor)
             ? companyHeader
             : throw new InvalidOperationException("Company header is missing.");
         return company;
+    }
+
+    public string GetCompanyForCache()
+    {
+        var company = this.GetUserCompany();
+        return "-" + company.ToLower().Replace(" ", "");
+    }
+
+    public string NormaliseCompanyForCache(string company)
+    {
+        return "-" + company.ToLower().Replace(" ", "");
     }
 }

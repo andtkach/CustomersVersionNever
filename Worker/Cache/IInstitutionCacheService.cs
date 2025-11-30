@@ -4,8 +4,8 @@ namespace Worker.Cache;
 
 public interface IInstitutionCacheService
 {
-    Task CacheInstitutionAsync(Institution institution);
-    Task ClearInstitutionAsync(Guid institutionId);
-    Task ClearInstitutionsListAsync();
-    Task ClearInstitutionListsAsync();
+    Task CacheInstitutionAsync(Institution institution, string company);
+    Task ClearInstitutionAsync(Guid institutionId, string company);
+    Task ClearInstitutionsListAsync(string company);
+    Task ClearInstitutionListsAsync(string company);
 }

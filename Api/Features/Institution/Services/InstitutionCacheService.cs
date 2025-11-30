@@ -36,7 +36,7 @@ public sealed class InstitutionCacheService : IInstitutionCacheService
 
     public async Task<InstitutionDto?> GetInstitutionAsync(Guid id)
     {
-        var cacheKey = $"{InstitutionCacheKeyPrefix}{id}";
+        var cacheKey = $"{InstitutionCacheKeyPrefix}{id}{_userHelper.GetCompanyForCache()}";
         
         return await _cache.GetOrCreateAsync(
             cacheKey,
@@ -50,23 +50,25 @@ public sealed class InstitutionCacheService : IInstitutionCacheService
 
     public async Task<IEnumerable<InstitutionDto>> GetInstitutionsAsync()
     {
+        var cacheKey = $"{InstitutionListCacheKey}{_userHelper.GetCompanyForCache()}";
         return await _cache.GetOrCreateAsync(
-            InstitutionListCacheKey,
+            cacheKey,
             async _ => await GetInstitutionsFromWorkerAsync(),
             CacheOptions);
     }
 
     public async Task<IEnumerable<InstitutionWithCustomersDto>> GetInstitutionsWithCustomersAsync()
     {
+        var cacheKey = $"{InstitutionListWithCustomersCacheKey}{_userHelper.GetCompanyForCache()}";
         return await _cache.GetOrCreateAsync(
-            InstitutionListWithCustomersCacheKey,
+            cacheKey,
             async _ => await GetInstitutionsWithCustomersFromWorkerAsync(),
             CacheOptions);
     }
 
     public async Task<InstitutionWithCustomersDto?> GetInstitutionWithCustomersAsync(Guid id)
     {
-        var cacheKey = $"{InstitutionWithCustomersCacheKeyPrefix}{id}";
+        var cacheKey = $"{InstitutionWithCustomersCacheKeyPrefix}{id}{_userHelper.GetCompanyForCache()}";
 
         return await _cache.GetOrCreateAsync(
             cacheKey,

@@ -21,8 +21,11 @@ public class DeleteInstitutionOperation(IInstitutionCacheService cacheService) :
         var existingInstitution = await backendDataContext.Institutions.FindAsync(payload.Id)
             ?? throw new InvalidOperationException($"Unable to find institution with id {payload.Id}");
 
+        if (!existingInstitution.Company.Equals(intent.Company))
+            throw new InvalidOperationException($"Unable to delete institution with id {payload.Id} by {intent.Company}");
+
         backendDataContext.Institutions.Remove(existingInstitution);
-        await cacheService.ClearInstitutionAsync(existingInstitution.Id);
-        await cacheService.ClearInstitutionListsAsync();
+        await cacheService.ClearInstitutionAsync(existingInstitution.Id, intent.Company);
+        await cacheService.ClearInstitutionListsAsync(intent.Company);
     }
 }
