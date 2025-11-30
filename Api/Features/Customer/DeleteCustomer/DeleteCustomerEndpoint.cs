@@ -1,5 +1,6 @@
 ﻿using Api.Abstractions;
 using Api.Data;
+using Api.Features.Customer.Services;
 using Azure.Messaging.ServiceBus;
 using Common.Authorization;
 using Common.Requests.Customer;
@@ -17,11 +18,13 @@ namespace Api.Features.Customer.DeleteCustomer
             ServiceBusClient serviceBusClient,
             IHttpClientFactory httpClientFactory,
             ILogger<Program> logger,
-            [FromServices] UserHelper userHelper)
+            [FromServices] UserHelper userHelper,
+            [FromServices] ICustomerCacheService cacheService)
         {
             var command = new DeleteCustomerCommand(customerId);
             var company = userHelper.GetUserCompany();
-            
+
+            await cacheService.Invalidate(customerId);
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,

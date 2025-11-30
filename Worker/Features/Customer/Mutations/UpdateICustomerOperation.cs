@@ -23,12 +23,15 @@ public class UpdateCustomerOperation(ICustomerCacheService cacheService) : ICust
 
         var existingInstitution = await backendDataContext.Institutions.FindAsync(payload.InstitutionId)
                                   ?? throw new InvalidOperationException($"Unable to find institution with id {payload.Id}");
+
+        if (!existingCustomer.Company.Equals(intent.Company))
+            throw new InvalidOperationException($"Unable to update customer with id {payload.Id} by {intent.Company}");
         
         existingCustomer.InstitutionId = payload.InstitutionId;
         existingCustomer.FirstName = payload.FirstName;
         existingCustomer.LastName = payload.LastName;
         
-        await cacheService.CacheCustomerAsync(existingCustomer);
-        await cacheService.ClearCustomersListAsync();
+        await cacheService.CacheCustomerAsync(existingCustomer, intent.Company);
+        await cacheService.ClearCustomersListAsync(intent.Company);
     }
 }

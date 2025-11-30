@@ -27,10 +27,11 @@ public class CreateCustomerOperation(ICustomerCacheService cacheService) : ICust
             InstitutionId = existingInstitution.Id,
             FirstName = payload.FirstName,
             LastName = payload.LastName,
+            Company = intent.Company,
         };
 
         await backendDataContext.Customers.AddAsync(newCustomer);
-        await cacheService.CacheCustomerAsync(newCustomer);
-        await cacheService.ClearCustomersListAsync();
+        await cacheService.CacheCustomerAsync(newCustomer, intent.Company);
+        await cacheService.ClearCustomersListAsync(intent.Company);
     }
 }

@@ -1,20 +1,16 @@
+using Common.Authorization;
 using Common.Dto;
 using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Api.Features.Customer.Services;
-
-public interface ICustomerCacheService
-{
-    Task<CustomerDto?> GetCustomerAsync(Guid id);
-    Task<IEnumerable<CustomerDto>> GetCustomersAsync();
-}
 
 public sealed class CustomerCacheService : ICustomerCacheService
 {
     private readonly HybridCache _cache;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<CustomerCacheService> _logger;
-    
+    private readonly UserHelper _userHelper;
+
     private const string CustomerCacheKeyPrefix = "customer-";
     private const string CustomerListCacheKey = "customers-list";
     private static readonly HybridCacheEntryOptions CacheOptions = new() 
@@ -25,16 +21,18 @@ public sealed class CustomerCacheService : ICustomerCacheService
     public CustomerCacheService(
         HybridCache cache, 
         IHttpClientFactory httpClientFactory,
-        ILogger<CustomerCacheService> logger)
+        ILogger<CustomerCacheService> logger,
+        UserHelper userHelper)
     {
         _cache = cache;
         _httpClientFactory = httpClientFactory;
         _logger = logger;
+        _userHelper = userHelper;
     }
 
     public async Task<CustomerDto?> GetCustomerAsync(Guid id)
     {
-        var cacheKey = $"{CustomerCacheKeyPrefix}{id}";
+        var cacheKey = $"{CustomerCacheKeyPrefix}{id}{_userHelper.GetCompanyForCache()}";
         
         return await _cache.GetOrCreateAsync(
             cacheKey,
@@ -48,17 +46,27 @@ public sealed class CustomerCacheService : ICustomerCacheService
 
     public async Task<IEnumerable<CustomerDto>> GetCustomersAsync()
     {
+        var cacheKey = $"{CustomerListCacheKey}{_userHelper.GetCompanyForCache()}";
         return await _cache.GetOrCreateAsync(
-            CustomerListCacheKey,
+            cacheKey,
             async _ => await GetCustomersFromWorkerAsync(),
             CacheOptions);
     }
 
+    public async Task Invalidate(Guid id)
+    {
+        await _cache.RemoveAsync($"{CustomerCacheKeyPrefix}{id}{_userHelper.GetCompanyForCache()}");
+        await _cache.RemoveAsync($"{CustomerListCacheKey}{_userHelper.GetCompanyForCache()}");
+    }
+    
     private async Task<CustomerDto?> GetCustomerFromWorkerAsync(Guid id)
     {
         try
         {
             var httpClient = _httpClientFactory.CreateClient("WorkerApi");
+            var userCompanyId = _userHelper.GetUserCompany();
+            httpClient.DefaultRequestHeaders.Add("company", userCompanyId);
+            
             var response = await httpClient.GetAsync($"customers/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -90,6 +98,9 @@ public sealed class CustomerCacheService : ICustomerCacheService
         try
         {
             var httpClient = _httpClientFactory.CreateClient("WorkerApi");
+            var userCompanyId = _userHelper.GetUserCompany();
+            httpClient.DefaultRequestHeaders.Add("company", userCompanyId);
+            
             var response = await httpClient.GetAsync("customers");
 
             if (response.IsSuccessStatusCode)

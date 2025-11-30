@@ -1,3 +1,4 @@
+using Common.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Worker.Data;
 
@@ -9,11 +10,13 @@ internal static class GetCustomersEndpoint
 {
     public static async Task<IResult> GetCustomersAsync(
         BackendDataContext context,
-        ILogger<Program> logger)
+        ILogger<Program> logger,
+        UserHelper userHelper)
     {
         try
         {
-            var customers = await context.Customers
+            var company = userHelper.GetCompanyHeader();
+            var customers = await context.Customers.Where(i => i.Company == company)
                 .OrderBy(i => i.FirstName)
                 .Select(i => new CustomerResponse(i.Id, i.InstitutionId, i.FirstName, i.LastName))
                 .ToListAsync();

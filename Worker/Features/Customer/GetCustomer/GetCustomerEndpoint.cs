@@ -1,4 +1,6 @@
+using Common.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Worker.Data;
 
 namespace Worker.Features.Customer.GetCustomer;
@@ -10,12 +12,14 @@ internal static class GetCustomerEndpoint
     public static async Task<IResult> GetCustomerAsync(
         [FromRoute] Guid customerId,
         BackendDataContext context,
-        ILogger<Program> logger)
+        ILogger<Program> logger,
+        UserHelper userHelper)
     {
         try
         {
-            var customer = await context.Customers.FindAsync(customerId);
-            
+            var company = userHelper.GetCompanyHeader();
+            var customer = await context.Customers.FirstOrDefaultAsync(i => i.Id == customerId && i.Company == company);
+
             if (customer == null)
             {
                 return Results.NotFound();

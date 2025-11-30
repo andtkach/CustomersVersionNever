@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Auth",
+			"name": "f01-Auth",
 			"item": [
 				{
 					"name": "r01-LoginAsAdmin",
@@ -116,7 +116,7 @@
 			]
 		},
 		{
-			"name": "Institutions",
+			"name": "f02-Institutions",
 			"item": [
 				{
 					"name": "r01-CreateInstitution",
@@ -239,6 +239,10 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "f03-Customers",
+			"item": []
 		}
 	],
 	"event": [
@@ -308,6 +312,18 @@
 		},
 		{
 			"key": "institutionDescription",
+			"value": ""
+		},
+		{
+			"key": "customerId",
+			"value": ""
+		},
+		{
+			"key": "customerFirstName",
+			"value": ""
+		},
+		{
+			"key": "customerLastName",
 			"value": ""
 		}
 	]

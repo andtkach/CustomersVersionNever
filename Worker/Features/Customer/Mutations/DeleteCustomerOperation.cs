@@ -21,8 +21,11 @@ public class DeleteCustomerOperation(ICustomerCacheService cacheService) : ICust
         var existingCustomer = await backendDataContext.Customers.FindAsync(payload.Id)
             ?? throw new InvalidOperationException($"Unable to find customer with id {payload.Id}");
 
+        if (!existingCustomer.Company.Equals(intent.Company))
+            throw new InvalidOperationException($"Unable to delete customer with id {payload.Id} by {intent.Company}");
+        
         backendDataContext.Customers.Remove(existingCustomer);
-        await cacheService.ClearCustomerAsync(existingCustomer.Id);
-        await cacheService.ClearCustomersListAsync();
+        await cacheService.ClearCustomerAsync(existingCustomer.Id, intent.Company);
+        await cacheService.ClearCustomersListAsync(intent.Company);
     }
 }

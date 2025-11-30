@@ -43,26 +43,44 @@ public static class ApiEndpoints
         app.MapGet("/institutions", GetInstitutionsEndpoint.GetInstitutionsAsync)
             .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRead));
 
-        app.MapPost("/customers", CreateCustomerEndpoint.CreateCustomerAsync);
-        app.MapPut("/customers/{customerId:guid}", UpdateCustomerEndpoint.UpdateCustomerAsync);
-        app.MapPatch("/customers/{customerId:guid}", PatchCustomerEndpoint.PatchCustomerAsync);
-        app.MapDelete("/customers/{customerId:guid}", DeleteCustomerEndpoint.DeleteCustomerAsync);
-        app.MapGet("/customers/{customerId:guid}", GetCustomerEndpoint.GetCustomerAsync);
-        app.MapGet("/customers", GetCustomersEndpoint.GetCustomersAsync);
+        app.MapPost("/customers", CreateCustomerEndpoint.CreateCustomerAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapPut("/customers/{customerId:guid}", UpdateCustomerEndpoint.UpdateCustomerAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapPatch("/customers/{customerId:guid}", PatchCustomerEndpoint.PatchCustomerAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapDelete("/customers/{customerId:guid}", DeleteCustomerEndpoint.DeleteCustomerAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRemove));
+        app.MapGet("/customers/{customerId:guid}", GetCustomerEndpoint.GetCustomerAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRead));
+        app.MapGet("/customers", GetCustomersEndpoint.GetCustomersAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRead));
 
-        app.MapPost("/documents", CreateDocumentEndpoint.CreateDocumentAsync);
-        app.MapPut("/documents/{documentId:guid}", UpdateDocumentEndpoint.UpdateDocumentAsync);
-        app.MapPatch("/documents/{documentId:guid}", PatchDocumentEndpoint.PatchDocumentAsync);
-        app.MapDelete("/documents/{documentId:guid}", DeleteDocumentEndpoint.DeleteDocumentAsync);
-        app.MapGet("/documents/{documentId:guid}", GetDocumentEndpoint.GetDocumentAsync);
-        app.MapGet("/documents", GetDocumentsEndpoint.GetDocumentsAsync);
+        app.MapPost("/documents", CreateDocumentEndpoint.CreateDocumentAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapPut("/documents/{documentId:guid}", UpdateDocumentEndpoint.UpdateDocumentAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapPatch("/documents/{documentId:guid}", PatchDocumentEndpoint.PatchDocumentAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapDelete("/documents/{documentId:guid}", DeleteDocumentEndpoint.DeleteDocumentAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRemove));
+        app.MapGet("/documents/{documentId:guid}", GetDocumentEndpoint.GetDocumentAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRead));
+        app.MapGet("/documents", GetDocumentsEndpoint.GetDocumentsAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRead));
 
-        app.MapPost("/addresses", CreateAddressEndpoint.CreateAddressAsync);
-        app.MapPut("/addresses/{addressId:guid}", UpdateAddressEndpoint.UpdateAddressAsync);
-        app.MapPatch("/addresses/{addressId:guid}", PatchAddressEndpoint.PatchAddressAsync);
-        app.MapDelete("/addresses/{addressId:guid}", DeleteAddressEndpoint.DeleteAddressAsync);
-        app.MapGet("/addresses/{addressId:guid}", GetAddressEndpoint.GetAddressAsync);
-        app.MapGet("/addresses", GetAddressesEndpoint.GetAddressesAsync);
+        app.MapPost("/addresses", CreateAddressEndpoint.CreateAddressAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapPut("/addresses/{addressId:guid}", UpdateAddressEndpoint.UpdateAddressAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapPatch("/addresses/{addressId:guid}", PatchAddressEndpoint.PatchAddressAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+        app.MapDelete("/addresses/{addressId:guid}", DeleteAddressEndpoint.DeleteAddressAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRemove));
+        app.MapGet("/addresses/{addressId:guid}", GetAddressEndpoint.GetAddressAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRead));
+        app.MapGet("/addresses", GetAddressesEndpoint.GetAddressesAsync)
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRead));
 
         return app;
     }

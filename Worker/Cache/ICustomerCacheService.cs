@@ -4,7 +4,7 @@ namespace Worker.Cache;
 
 public interface ICustomerCacheService
 {
-    Task CacheCustomerAsync(Customer customer);
-    Task ClearCustomerAsync(Guid customerId);
-    Task ClearCustomersListAsync();
+    Task CacheCustomerAsync(Customer customer, string company);
+    Task ClearCustomerAsync(Guid customerId, string company);
+    Task ClearCustomersListAsync(string company);
 }
