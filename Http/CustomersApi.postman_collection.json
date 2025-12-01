@@ -1159,6 +1159,22 @@
 		{
 			"key": "addressCurrent",
 			"value": ""
+		},
+		{
+			"key": "documentId",
+			"value": ""
+		},
+		{
+			"key": "documentTitle",
+			"value": ""
+		},
+		{
+			"key": "documentContent",
+			"value": ""
+		},
+		{
+			"key": "documentActive",
+			"value": ""
 		}
 	]
 }
