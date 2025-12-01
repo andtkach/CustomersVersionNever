@@ -21,8 +21,11 @@ public class DeleteDocumentOperation(IDocumentCacheService cacheService) : IDocu
         var existingDocument = await backendDataContext.Documents.FindAsync(payload.Id)
             ?? throw new InvalidOperationException($"Unable to find document with id {payload.Id}");
 
+        if (!existingDocument.Company.Equals(intent.Company))
+            throw new InvalidOperationException($"Unable to delete document with id {payload.Id} by {intent.Company}");
+
         backendDataContext.Documents.Remove(existingDocument);
-        await cacheService.ClearDocumentAsync(existingDocument.Id);
-        await cacheService.ClearDocumentsListAsync();
+        await cacheService.ClearDocumentAsync(existingDocument.Id, intent.Company);
+        await cacheService.ClearDocumentsListAsync(intent.Company);
     }
 }

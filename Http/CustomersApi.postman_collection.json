@@ -63,6 +63,167 @@
 					"response": []
 				},
 				{
+					"name": "r02-RegisterUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Body contains token\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"email\");",
+									"});",
+									"pm.test(\"Id is not empty\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.empty;",
+									"    pm.expect(jsonData.email).to.not.be.empty;",
+									"    pm.expect(jsonData.company).to.not.be.empty;",
+									"",
+									"    pm.collectionVariables.set(\"userId\", jsonData.id);    ",
+									"    pm.collectionVariables.set(\"userEmail\", jsonData.email);    ",
+									"    pm.collectionVariables.set(\"userCompany\", jsonData.company);    ",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"email\": \"{{$randomFirstName}}{{$randomInt}}@email.com\",\r\n\t\"company\": \"ADMIN\",\r\n\t\"password\": \"Secret123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AuthApiUrl}}/register",
+							"host": [
+								"{{AuthApiUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r03-LoginUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Body contains token\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"pm.test(\"Id is not empty\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.empty;",
+									"    pm.expect(jsonData.token).to.not.be.empty;",
+									"",
+									"    pm.collectionVariables.set(\"userId\", jsonData.id);    ",
+									"    pm.collectionVariables.set(\"userToken\", jsonData.token);    ",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"email\": \"{{userEmail}}\",\r\n\t\"password\": \"Secret123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AuthApiUrl}}/login",
+							"host": [
+								"{{AuthApiUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r04-AdminInfo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains data\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"aud\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"iss\");\r",
+									"});\r",
+									"pm.test(\"Check permissions\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.permission).to.not.be.empty;\r",
+									"    pm.expect(jsonData.permission).to.be.equal(\"data:read,data:remove,data:write\");    \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{AuthApiUrl}}/me",
+							"host": [
+								"{{AuthApiUrl}}"
+							],
+							"path": [
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "r05-UserInfo",
 					"event": [
 						{
@@ -182,6 +343,59 @@
 					"response": []
 				},
 				{
+					"name": "r02-CreateInstitutionNoRights",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{$randomWord}}\",\r\n    \"description\": \"{{$randomWords}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/institutions",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"institutions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "r03-GetInstitutionByIdAsAdmin",
 					"event": [
 						{
@@ -237,12 +451,612 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "r04-GetInstitutionByIdAsUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Institution id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    \r",
+									"    pm.expect(jsonData.id).to.be.equal(pm.collectionVariables.get(\"institutionId\"));\r",
+									"    pm.expect(jsonData.name).to.be.equal(pm.collectionVariables.get(\"institutionName\"));\r",
+									"    pm.expect(jsonData.description).to.be.equal(pm.collectionVariables.get(\"institutionDescription\"));    \r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/institutions/{{institutionId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"institutions",
+								"{{institutionId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r05-GetAllInstitutionsAsUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains institutions\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"institutions\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/institutions",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"institutions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r06-GetAllInstitutionsAsAdmin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains institutions\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"institutions\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/institutions",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"institutions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r07-GetInstitutionByIdWithCustomers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Institution id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    \r",
+									"    pm.expect(jsonData.id).to.be.equal(pm.collectionVariables.get(\"institutionId\"));\r",
+									"    pm.expect(jsonData.name).to.be.equal(pm.collectionVariables.get(\"institutionName\"));\r",
+									"    pm.expect(jsonData.description).to.be.equal(pm.collectionVariables.get(\"institutionDescription\"));    \r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/institutions/{{institutionId}}?includeCustomers=true",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"institutions",
+								"{{institutionId}}"
+							],
+							"query": [
+								{
+									"key": "includeCustomers",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r08-GetAllInstitutionsWithCustomers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains institutions\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"institutions\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/institutions?includeCustomers=true",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"institutions"
+							],
+							"query": [
+								{
+									"key": "includeCustomers",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r09-UpdateInstitution",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{institutionName}}-Updated\",\r\n    \"description\": \"{{institutionDescription}}-Updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/institutions/{{institutionId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"institutions",
+								"{{institutionId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r10-PatchInstitution",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"{{institutionDescription}}-Patched\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/institutions/{{institutionId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"institutions",
+								"{{institutionId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r11-DeleteGetInstitution",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/institutions/{{institutionId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"institutions",
+								"{{institutionId}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "f03-Customers",
-			"item": []
+			"item": [
+				{
+					"name": "r01-CreateCustomer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Institution id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    pm.collectionVariables.set(\"customerId\", jsonData.id);\r",
+									"    pm.collectionVariables.set(\"customerFirstName\", jsonData.firstName);\r",
+									"    pm.collectionVariables.set(\"customerLastName\", jsonData.lastName);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"institutionId\": \"{{institutionId}}\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/customers",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r02-GetCustomerByIdAsAdmin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Customer id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    \r",
+									"    pm.expect(jsonData.id).to.be.equal(pm.collectionVariables.get(\"customerId\"));\r",
+									"    pm.expect(jsonData.firstName).to.be.equal(pm.collectionVariables.get(\"customerFirstName\"));\r",
+									"    pm.expect(jsonData.lastName).to.be.equal(pm.collectionVariables.get(\"customerLastName\"));    \r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/customers/{{customerId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r03-GetCustomerByIdAsUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Institution id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    \r",
+									"    pm.expect(jsonData.id).to.be.equal(pm.collectionVariables.get(\"customerId\"));\r",
+									"    pm.expect(jsonData.firstName).to.be.equal(pm.collectionVariables.get(\"customerFirstName\"));\r",
+									"    pm.expect(jsonData.lastName).to.be.equal(pm.collectionVariables.get(\"customerLastName\"));  \r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/customers/{{customerId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -324,6 +1138,26 @@
 		},
 		{
 			"key": "customerLastName",
+			"value": ""
+		},
+		{
+			"key": "addressId",
+			"value": ""
+		},
+		{
+			"key": "addressCountry",
+			"value": ""
+		},
+		{
+			"key": "addressCity",
+			"value": ""
+		},
+		{
+			"key": "addressStreet",
+			"value": ""
+		},
+		{
+			"key": "addressCurrent",
 			"value": ""
 		}
 	]

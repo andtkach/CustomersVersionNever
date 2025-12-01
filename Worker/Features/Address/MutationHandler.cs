@@ -31,11 +31,11 @@ internal sealed class AddressMutationHandler : IAddressMutationHandler
         HybridCache hybridCache,
         ILogger logger)
     {
+        var intent = await frontendDataContext.Intents.FindAsync(request.IntentId)
+                     ?? throw new InvalidOperationException($"Unable to find intent with id {request.IntentId}");
+
         try
         {
-            var intent = await frontendDataContext.Intents.FindAsync(request.IntentId)
-                ?? throw new InvalidOperationException($"Unable to find intent with id {request.IntentId}");
-
             var operation = _operationFactory.CreateOperation(intent.Action);
             await operation.ExecuteAsync(intent, frontendDataContext, backendDataContext, hybridCache);
 
@@ -49,6 +49,10 @@ internal sealed class AddressMutationHandler : IAddressMutationHandler
         }
         catch (Exception ex)
         {
+            intent.State = States.Failed;
+            intent.UpdatedAtUtc = DateTime.UtcNow;
+            await frontendDataContext.SaveChangesAsync();
+            
             logger.LogError(ex, "Error processing intent {IntentId}", request.IntentId);
             return false;
         }

@@ -21,8 +21,11 @@ public class DeleteAddressOperation(IAddressCacheService cacheService) : IAddres
         var existingAddress = await backendDataContext.Addresses.FindAsync(payload.Id)
             ?? throw new InvalidOperationException($"Unable to find address with id {payload.Id}");
 
+        if (!existingAddress.Company.Equals(intent.Company))
+            throw new InvalidOperationException($"Unable to delete address with id {payload.Id} by {intent.Company}");
+
         backendDataContext.Addresses.Remove(existingAddress);
-        await cacheService.ClearAddressAsync(existingAddress.Id);
-        await cacheService.ClearAddressesListAsync();
+        await cacheService.ClearAddressAsync(existingAddress.Id, intent.Company);
+        await cacheService.ClearAddressesListAsync(intent.Company);
     }
 }

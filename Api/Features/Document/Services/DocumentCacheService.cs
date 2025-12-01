@@ -1,20 +1,16 @@
+using Common.Authorization;
 using Common.Dto;
 using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Api.Features.Document.Services;
-
-public interface IDocumentCacheService
-{
-    Task<DocumentDto?> GetDocumentAsync(Guid id);
-    Task<IEnumerable<DocumentDto>> GetDocumentsAsync();
-}
 
 public sealed class DocumentCacheService : IDocumentCacheService
 {
     private readonly HybridCache _cache;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<DocumentCacheService> _logger;
-    
+    private readonly UserHelper _userHelper;
+
     private const string DocumentCacheKeyPrefix = "document-";
     private const string DocumentListCacheKey = "documents-list";
     private static readonly HybridCacheEntryOptions CacheOptions = new() 
@@ -25,16 +21,18 @@ public sealed class DocumentCacheService : IDocumentCacheService
     public DocumentCacheService(
         HybridCache cache, 
         IHttpClientFactory httpClientFactory,
-        ILogger<DocumentCacheService> logger)
+        ILogger<DocumentCacheService> logger,
+        UserHelper userHelper)
     {
         _cache = cache;
         _httpClientFactory = httpClientFactory;
         _logger = logger;
+        _userHelper = userHelper;
     }
 
     public async Task<DocumentDto?> GetDocumentAsync(Guid id)
     {
-        var cacheKey = $"{DocumentCacheKeyPrefix}{id}";
+        var cacheKey = $"{DocumentCacheKeyPrefix}{id}{_userHelper.GetCompanyForCache()}";
         
         return await _cache.GetOrCreateAsync(
             cacheKey,
@@ -48,10 +46,17 @@ public sealed class DocumentCacheService : IDocumentCacheService
 
     public async Task<IEnumerable<DocumentDto>> GetDocumentsAsync()
     {
+        var cacheKey = $"{DocumentListCacheKey}{_userHelper.GetCompanyForCache()}";
         return await _cache.GetOrCreateAsync(
-            DocumentListCacheKey,
+            cacheKey,
             async _ => await GetDocumentsFromWorkerAsync(),
             CacheOptions);
+    }
+
+    public async Task Invalidate(Guid id)
+    {
+        await _cache.RemoveAsync($"{DocumentCacheKeyPrefix}{id}{_userHelper.GetCompanyForCache()}");
+        await _cache.RemoveAsync($"{DocumentListCacheKey}{_userHelper.GetCompanyForCache()}");
     }
 
     private async Task<DocumentDto?> GetDocumentFromWorkerAsync(Guid id)
@@ -59,6 +64,9 @@ public sealed class DocumentCacheService : IDocumentCacheService
         try
         {
             var httpClient = _httpClientFactory.CreateClient("WorkerApi");
+            var userCompanyId = _userHelper.GetUserCompany();
+            httpClient.DefaultRequestHeaders.Add("company", userCompanyId); 
+            
             var response = await httpClient.GetAsync($"documents/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -90,6 +98,9 @@ public sealed class DocumentCacheService : IDocumentCacheService
         try
         {
             var httpClient = _httpClientFactory.CreateClient("WorkerApi");
+            var userCompanyId = _userHelper.GetUserCompany();
+            httpClient.DefaultRequestHeaders.Add("company", userCompanyId);
+
             var response = await httpClient.GetAsync("documents");
 
             if (response.IsSuccessStatusCode)

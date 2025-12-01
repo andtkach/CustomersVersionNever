@@ -4,7 +4,7 @@ namespace Worker.Cache;
 
 public interface IDocumentCacheService
 {
-    Task CacheDocumentAsync(Document document);
-    Task ClearDocumentAsync(Guid documentId);
-    Task ClearDocumentsListAsync();
+    Task CacheDocumentAsync(Document document, string company);
+    Task ClearDocumentAsync(Guid documentId, string company);
+    Task ClearDocumentsListAsync(string company);
 }

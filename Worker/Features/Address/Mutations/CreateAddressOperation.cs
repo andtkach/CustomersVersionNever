@@ -28,11 +28,12 @@ public class CreateAddressOperation(IAddressCacheService cacheService) : IAddres
             Country = payload.Country,
             City = payload.City,
             Street = payload.Street,
-            Current = payload.Current
+            Current = payload.Current,
+            Company = intent.Company,
         };
 
         await backendDataContext.Addresses.AddAsync(newAddress);
-        await cacheService.CacheAddressAsync(newAddress);
-        await cacheService.ClearAddressesListAsync();
+        await cacheService.CacheAddressAsync(newAddress, intent.Company);
+        await cacheService.ClearAddressesListAsync(intent.Company);
     }
 }

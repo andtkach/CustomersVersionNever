@@ -23,14 +23,17 @@ public class UpdateAddressOperation(IAddressCacheService cacheService) : IAddres
 
         var existingCustomer = await backendDataContext.Customers.FindAsync(payload.CustomerId)
                                   ?? throw new InvalidOperationException($"Unable to find customer with id {payload.Id}");
-        
+
+        if (!existingAddress.Company.Equals(intent.Company))
+            throw new InvalidOperationException($"Unable to update address with id {payload.Id} by {intent.Company}");
+
         existingAddress.CustomerId = payload.CustomerId;
         existingAddress.Country = payload.Country;
         existingAddress.City = payload.City;
         existingAddress.Street = payload.Street;
         existingAddress.Current = payload.Current;
 
-        await cacheService.CacheAddressAsync(existingAddress);
-        await cacheService.ClearAddressesListAsync();
+        await cacheService.CacheAddressAsync(existingAddress, intent.Company);
+        await cacheService.ClearAddressesListAsync(intent.Company);
     }
 }

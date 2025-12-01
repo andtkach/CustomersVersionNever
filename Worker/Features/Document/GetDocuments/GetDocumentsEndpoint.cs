@@ -1,3 +1,4 @@
+using Common.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Worker.Data;
 
@@ -9,11 +10,13 @@ internal static class GetDocumentsEndpoint
 {
     public static async Task<IResult> GetDocumentsAsync(
         BackendDataContext context,
-        ILogger<Program> logger)
+        ILogger<Program> logger,
+        UserHelper userHelper)
     {
         try
         {
-            var documents = await context.Documents
+            var company = userHelper.GetCompanyHeader();
+            var documents = await context.Documents.Where(d => d.Company == company)
                 .OrderBy(i => i.Title)
                 .Select(d => new DocumentResponse(d.Id, d.CustomerId, d.Title, d.Content, d.Active))
                 .ToListAsync();

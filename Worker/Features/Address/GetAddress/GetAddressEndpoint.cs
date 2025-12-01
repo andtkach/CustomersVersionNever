@@ -1,4 +1,6 @@
+using Common.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Worker.Data;
 
 namespace Worker.Features.Address.GetAddress;
@@ -10,11 +12,13 @@ internal static class GetAddressEndpoint
     public static async Task<IResult> GetAddressAsync(
         [FromRoute] Guid addressId,
         BackendDataContext context,
-        ILogger<Program> logger)
+        ILogger<Program> logger,
+        UserHelper userHelper)
     {
         try
         {
-            var address = await context.Addresses.FindAsync(addressId);
+            var company = userHelper.GetCompanyHeader();
+            var address = await context.Addresses.FirstOrDefaultAsync(a => a.Id == addressId && a.Company == company);
             
             if (address == null)
             {

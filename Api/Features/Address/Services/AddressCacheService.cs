@@ -1,20 +1,16 @@
+using Common.Authorization;
 using Common.Dto;
 using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Api.Features.Address.Services;
-
-public interface IAddressCacheService
-{
-    Task<AddressDto?> GetAddressAsync(Guid id);
-    Task<IEnumerable<AddressDto>> GetAddressesAsync();
-}
 
 public sealed class AddressCacheService : IAddressCacheService
 {
     private readonly HybridCache _cache;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<AddressCacheService> _logger;
-    
+    private readonly UserHelper _userHelper;
+
     private const string AddressCacheKeyPrefix = "address-";
     private const string AddressListCacheKey = "addresses-list";
     private static readonly HybridCacheEntryOptions CacheOptions = new() 
@@ -25,16 +21,18 @@ public sealed class AddressCacheService : IAddressCacheService
     public AddressCacheService(
         HybridCache cache, 
         IHttpClientFactory httpClientFactory,
-        ILogger<AddressCacheService> logger)
+        ILogger<AddressCacheService> logger,
+        UserHelper userHelper)
     {
         _cache = cache;
         _httpClientFactory = httpClientFactory;
         _logger = logger;
+        _userHelper = userHelper;
     }
 
     public async Task<AddressDto?> GetAddressAsync(Guid id)
     {
-        var cacheKey = $"{AddressCacheKeyPrefix}{id}";
+        var cacheKey = $"{AddressCacheKeyPrefix}{id}{_userHelper.GetCompanyForCache()}";
         
         return await _cache.GetOrCreateAsync(
             cacheKey,
@@ -48,10 +46,17 @@ public sealed class AddressCacheService : IAddressCacheService
 
     public async Task<IEnumerable<AddressDto>> GetAddressesAsync()
     {
+        var cacheKey = $"{AddressListCacheKey}{_userHelper.GetCompanyForCache()}";
         return await _cache.GetOrCreateAsync(
-            AddressListCacheKey,
+            cacheKey,
             async _ => await GetAddressesFromWorkerAsync(),
             CacheOptions);
+    }
+
+    public async Task Invalidate(Guid id)
+    {
+        await _cache.RemoveAsync($"{AddressCacheKeyPrefix}{id}{_userHelper.GetCompanyForCache()}");
+        await _cache.RemoveAsync($"{AddressListCacheKey}{_userHelper.GetCompanyForCache()}");
     }
 
     private async Task<AddressDto?> GetAddressFromWorkerAsync(Guid id)
@@ -59,6 +64,9 @@ public sealed class AddressCacheService : IAddressCacheService
         try
         {
             var httpClient = _httpClientFactory.CreateClient("WorkerApi");
+            var userCompanyId = _userHelper.GetUserCompany();
+            httpClient.DefaultRequestHeaders.Add("company", userCompanyId);
+
             var response = await httpClient.GetAsync($"addresses/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -90,6 +98,9 @@ public sealed class AddressCacheService : IAddressCacheService
         try
         {
             var httpClient = _httpClientFactory.CreateClient("WorkerApi");
+            var userCompanyId = _userHelper.GetUserCompany();
+            httpClient.DefaultRequestHeaders.Add("company", userCompanyId);
+
             var response = await httpClient.GetAsync("addresses");
 
             if (response.IsSuccessStatusCode)

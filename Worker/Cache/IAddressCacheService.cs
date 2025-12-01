@@ -4,7 +4,7 @@ namespace Worker.Cache;
 
 public interface IAddressCacheService
 {
-    Task CacheAddressAsync(Address address);
-    Task ClearAddressAsync(Guid addressId);
-    Task ClearAddressesListAsync();
+    Task CacheAddressAsync(Address address, string company);
+    Task ClearAddressAsync(Guid addressId, string company);
+    Task ClearAddressesListAsync(string company);
 }

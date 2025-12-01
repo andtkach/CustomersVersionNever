@@ -24,12 +24,15 @@ public class PatchDocumentOperation(IDocumentCacheService cacheService) : IDocum
         var existingCustomer = await backendDataContext.Customers.FindAsync(payload.CustomerId)
                                   ?? throw new InvalidOperationException($"Unable to find customer with id {payload.Id}");
 
+        if (!existingDocument.Company.Equals(intent.Company))
+            throw new InvalidOperationException($"Unable to patch document with id {payload.Id} by {intent.Company}");
+
         existingDocument.CustomerId = payload.CustomerId ?? existingDocument.CustomerId;
         existingDocument.Title = payload.Title ?? existingDocument.Title;
         existingDocument.Content = payload.Content ?? existingDocument.Content;
         existingDocument.Active = payload.Active ?? existingDocument.Active;
 
-        await cacheService.CacheDocumentAsync(existingDocument);
-        await cacheService.ClearDocumentsListAsync();
+        await cacheService.CacheDocumentAsync(existingDocument, intent.Company);
+        await cacheService.ClearDocumentsListAsync(intent.Company);
     }
 }

@@ -27,11 +27,12 @@ public class CreateDocumentOperation(IDocumentCacheService cacheService) : IDocu
             CustomerId = existingCustomer.Id,
             Title = payload.Title,
             Content = payload.Content,
-            Active = payload.Active
+            Active = payload.Active,
+            Company = intent.Company,
         };
 
         await backendDataContext.Documents.AddAsync(newDocument);
-        await cacheService.CacheDocumentAsync(newDocument);
-        await cacheService.ClearDocumentsListAsync();
+        await cacheService.CacheDocumentAsync(newDocument, intent.Company);
+        await cacheService.ClearDocumentsListAsync(intent.Company);
     }
 }

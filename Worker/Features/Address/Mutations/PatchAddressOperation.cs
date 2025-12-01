@@ -23,6 +23,9 @@ public class PatchAddressOperation(IAddressCacheService cacheService) : IAddress
 
         var existingCustomer = await backendDataContext.Customers.FindAsync(payload.CustomerId)
                                   ?? throw new InvalidOperationException($"Unable to find customer with id {payload.Id}");
+        
+        if (!existingAddress.Company.Equals(intent.Company))
+            throw new InvalidOperationException($"Unable to patch address with id {payload.Id} by {intent.Company}");
 
         existingAddress.CustomerId = payload.CustomerId ?? existingAddress.CustomerId;
         existingAddress.Country = payload.Country ?? existingAddress.Country;
@@ -30,7 +33,7 @@ public class PatchAddressOperation(IAddressCacheService cacheService) : IAddress
         existingAddress.Street = payload.Street ?? existingAddress.Street;
         existingAddress.Current = payload.Current ?? existingAddress.Current;
 
-        await cacheService.CacheAddressAsync(existingAddress);
-        await cacheService.ClearAddressesListAsync();
+        await cacheService.CacheAddressAsync(existingAddress, intent.Company);
+        await cacheService.ClearAddressesListAsync(intent.Company);
     }
 }

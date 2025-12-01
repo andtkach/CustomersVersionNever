@@ -1,4 +1,6 @@
+using Common.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Worker.Data;
 
 namespace Worker.Features.Document.GetDocument;
@@ -10,11 +12,13 @@ internal static class GetDocumentEndpoint
     public static async Task<IResult> GetDocumentAsync(
         [FromRoute] Guid documentId,
         BackendDataContext context,
-        ILogger<Program> logger)
+        ILogger<Program> logger,
+        UserHelper userHelper)
     {
         try
         {
-            var document = await context.Documents.FindAsync(documentId);
+            var company = userHelper.GetCompanyHeader();
+            var document = await context.Documents.FirstOrDefaultAsync(d => d.Id == documentId && d.Company == company);
             
             if (document == null)
             {
