@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using System.IO;
+
 const string aspireServiceBusName = "ServiceBus";
 const string institutionsQueueName = "Institutions";
 const string customersQueueName = "Customers";
@@ -66,4 +69,57 @@ Console.WriteLine($"Created {auth}", auth);
 Console.WriteLine($"Created {worker}", worker);
 Console.WriteLine($"Created {api}", api);
 
+// Start compose-managed containers (customers-ui + azurite) if available.
+// Failures are logged but do not stop the composition.
+TryEnsureComposeServicesRunning();
+
 await builder.Build().RunAsync();
+
+void TryEnsureComposeServicesRunning()
+{
+    try
+    {
+        var composeFile = Path.Combine(Directory.GetCurrentDirectory(), "docker-compose.yml");
+        if (!File.Exists(composeFile))
+        {
+            Console.WriteLine("docker-compose.yml not found in working directory; skipping compose startup.");
+            return;
+        }
+
+        // Bring up both customers-ui and azurite services defined in docker-compose.yml
+        var psi = new ProcessStartInfo
+        {
+            FileName = "docker",
+            Arguments = $"compose -f \"{composeFile}\" up -d customers-ui azurite",
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        using var proc = Process.Start(psi);
+        if (proc == null)
+        {
+            Console.WriteLine("Failed to start docker process for compose; is Docker installed?");
+            return;
+        }
+
+        var stdout = proc.StandardOutput.ReadToEnd();
+        var stderr = proc.StandardError.ReadToEnd();
+        proc.WaitForExit(30000);
+
+        if (proc.ExitCode == 0)
+        {
+            Console.WriteLine("Compose services started (customers-ui, azurite).");
+            if (!string.IsNullOrWhiteSpace(stdout)) Console.WriteLine(stdout);
+        }
+        else
+        {
+            Console.WriteLine($"docker compose exited with code {proc.ExitCode}. Stderr:\n{stderr}");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Could not start compose services: {ex.Message}");
+    }
+}

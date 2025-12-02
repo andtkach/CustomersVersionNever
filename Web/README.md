@@ -64,7 +64,7 @@ A complete React + TypeScript web application for managing customers, institutio
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd CustomersUI
+cd Web
 ```
 
 2. Install dependencies:
@@ -77,8 +77,8 @@ npm install
 Copy `.env.example` to `.env` and update the API URLs:
 
 ```bash
-VITE_DATA_API_URL=http://localhost:5000
-VITE_AUTH_API_URL=http://localhost:5001
+VITE_DATA_API_URL=http://localhost:20011
+VITE_AUTH_API_URL=http://localhost:20031
 ```
 
 ### Development
@@ -89,7 +89,7 @@ Run the development server:
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173`
+The application will be available at `http://localhost:20043`
 
 ### Build
 
@@ -116,10 +116,10 @@ docker build -t customers-ui .
 Run the container:
 
 ```bash
-docker run -p 8080:80 customers-ui
+docker run -p 20043:80 customers-ui
 ```
 
-The application will be available at `http://localhost:8080`
+The application will be available at `http://localhost:20043`
 
 ## Project Structure
 
