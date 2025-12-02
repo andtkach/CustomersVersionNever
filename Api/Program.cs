@@ -37,6 +37,19 @@ builder.Services.AddHttpClient("WorkerApi", client =>
     client.BaseAddress = new Uri("http://worker");
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("UiPolicy", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:20043", "https://localhost:20043")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 builder.Services.AddScoped<UserHelper>();
 builder.Services.AddScoped<Api.Features.Institution.Services.IInstitutionCacheService, Api.Features.Institution.Services.InstitutionCacheService>();
 builder.Services.AddScoped<Api.Features.Customer.Services.ICustomerCacheService, Api.Features.Customer.Services.CustomerCacheService>();
@@ -73,6 +86,11 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+app.UseHttpsRedirection();
+app.UseCors("UiPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
@@ -84,9 +102,6 @@ if (app.Environment.IsDevelopment())
     await dbContext.Database.MigrateAsync();
 }
 
-app.UseAuthorization();
-
-app.UseHttpsRedirection();
 app.MapInstitutionsEndpoints();
 await app.RunAsync();
 

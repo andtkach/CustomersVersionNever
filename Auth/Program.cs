@@ -111,14 +111,24 @@ builder.Services
         };
     });
 
-
 builder.Services.AddAuthorization();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("UiPolicy", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:20043", "https://localhost:20043")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -128,6 +138,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("UiPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
