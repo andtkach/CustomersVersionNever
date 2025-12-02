@@ -1,4 +1,5 @@
 ﻿using Common.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Storage.Features.Storage.DeleteFile;
 using Storage.Features.Storage.GetFile;
 using Storage.Features.Storage.UploadFile;
@@ -11,7 +12,8 @@ public static class ApiEndpoints
     {
         
         app.MapPost("/storage/{fileId:guid}", UploadFileEndpoint.UploadFileAsync)
-            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite));
+            .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataWrite))
+            .Accepts<IFormFile>("multipart/form-data");
         
         app.MapDelete("/storage/{fileId:guid}", DeleteFileEndpoint.DeleteFileAsync)
             .RequireAuthorization(policy => policy.RequirePermission(Permissions.DataRemove));

@@ -6,12 +6,17 @@ using ServiceDefaults;
 using System.Security.Claims;
 using System.Text;
 using Storage.Features;
+using Azure.Storage;
+using Azure.Storage.Blobs;
+using Storage.Health;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 AppContext.SetSwitch("Azure.Experimental.EnableActivitySource", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
+//builder.AddServiceDefaults();
 
 builder.Services.AddCors(options =>
 {
@@ -54,6 +59,55 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+// Blob Storage configuration: prefer configured connection string, then environment, then Azurite development settings
+var storageConnection = builder.Configuration["AzureStorage:ConnectionString"]
+                        ?? builder.Configuration["ConnectionStrings:AzureStorage"]
+                        ?? Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+
+if (!string.IsNullOrWhiteSpace(storageConnection))
+{
+    try
+    {
+        builder.Services.AddSingleton(new BlobServiceClient(storageConnection));
+    }
+    catch (FormatException ex)
+    {
+        throw new InvalidOperationException(
+            "Azure Storage connection string is invalid. Ensure 'AzureStorage:ConnectionString', 'ConnectionStrings:AzureStorage' or the 'AZURE_STORAGE_CONNECTION_STRING' environment variable contains a valid value.",
+            ex);
+    }
+}
+else if (builder.Environment.IsDevelopment())
+{
+    // For local development use explicit Azurite settings from configuration or environment variables.
+    // This avoids embedding a hard-coded connection string in source control.
+    var azuriteBlobEndpoint = builder.Configuration["Azurite:BlobEndpoint"] ?? "http://127.0.0.1:10000/devstoreaccount1";
+    var azuriteAccountName = builder.Configuration["Azurite:AccountName"] ?? "devstoreaccount1";
+    var azuriteAccountKey = builder.Configuration["Azurite:AccountKey"] ?? Environment.GetEnvironmentVariable("AZURITE_ACCOUNT_KEY");
+
+    if (string.IsNullOrWhiteSpace(azuriteAccountKey))
+    {
+        throw new InvalidOperationException(
+            "No Azure Storage connection configured. For local development set 'Azurite:AccountKey' in configuration or 'AZURITE_ACCOUNT_KEY' environment variable. Do not store secrets in source control.");
+    }
+
+    var endpointUri = new Uri(azuriteBlobEndpoint);
+    var credential = new StorageSharedKeyCredential(azuriteAccountName, azuriteAccountKey);
+    var blobServiceClient = new BlobServiceClient(endpointUri, credential);
+    builder.Services.AddSingleton(blobServiceClient);
+}
+else
+{
+    throw new InvalidOperationException(
+        "Azure Storage configuration missing. Set 'AzureStorage:ConnectionString' or the 'AZURE_STORAGE_CONNECTION_STRING' environment variable for non-development environments.");
+}
+
+builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
+
+// Register health checks and blob storage health check
+builder.Services.AddHealthChecks()
+    .AddCheck<BlobStorageHealthCheck>("blob_storage");
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
@@ -75,6 +129,7 @@ if (app.Environment.IsDevelopment())
 
 }
 
+app.MapHealthChecks("/health");
 app.MapStorageEndpoints();
 
 await app.RunAsync();
