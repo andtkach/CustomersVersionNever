@@ -1055,6 +1055,1086 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "r04-GetAllCustomers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/customers",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r05-UpdateCustomer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"institutionId\": \"{{institutionId}}\",\r\n    \"firstName\": \"{{customerFirstName}}-Updated\",\r\n    \"lastName\": \"{{customerLastName}}-Updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/customers/{{customerId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r06-PatchCustomer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"institutionId\": \"{{institutionId}}\",\r\n    \"lastName\": \"{{customerLastName}}-Patched\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/customers/{{customerId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r07-DeleteCustomer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/customers/{{customerId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "f04-Addresses",
+			"item": [
+				{
+					"name": "r01-CreateAddress",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Address id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    pm.collectionVariables.set(\"addressId\", jsonData.id);\r",
+									"    pm.collectionVariables.set(\"addressCountry\", jsonData.country);\r",
+									"    pm.collectionVariables.set(\"addressCity\", jsonData.city);\r",
+									"    pm.collectionVariables.set(\"addressStreet\", jsonData.street);\r",
+									"    pm.collectionVariables.set(\"addressCurrent\", jsonData.current);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerId\": \"{{customerId}}\",\r\n    \"country\": \"{{$randomCountry}}\",\r\n    \"city\": \"{{$randomCity}}\",\r\n    \"street\": \"{{$randomStreetName}}\",\r\n    \"current\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/addresses",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"addresses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r02-GetAddressByIdAsAdmin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Address id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    \r",
+									"    pm.expect(jsonData.id).to.be.equal(pm.collectionVariables.get(\"addressId\"));\r",
+									"    pm.expect(jsonData.country).to.be.equal(pm.collectionVariables.get(\"addressCountry\"));\r",
+									"    pm.expect(jsonData.city).to.be.equal(pm.collectionVariables.get(\"addressCity\"));    \r",
+									"    pm.expect(jsonData.street).to.be.equal(pm.collectionVariables.get(\"addressStreet\"));    \r",
+									"    pm.expect(jsonData.current).to.be.equal(pm.collectionVariables.get(\"addressCurrent\"));    \r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/addresses/{{addressId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"addresses",
+								"{{addressId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r03-GetAddressByIdAsUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Address id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    \r",
+									"    pm.expect(jsonData.id).to.be.equal(pm.collectionVariables.get(\"addressId\"));\r",
+									"    pm.expect(jsonData.country).to.be.equal(pm.collectionVariables.get(\"addressCountry\"));\r",
+									"    pm.expect(jsonData.city).to.be.equal(pm.collectionVariables.get(\"addressCity\"));    \r",
+									"    pm.expect(jsonData.street).to.be.equal(pm.collectionVariables.get(\"addressStreet\"));    \r",
+									"    pm.expect(jsonData.current).to.be.equal(pm.collectionVariables.get(\"addressCurrent\"));    \r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/addresses/{{addressId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"addresses",
+								"{{addressId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r04-GetAllAddresses",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/addresses",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"addresses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r05-UpdateAddress",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerId\": \"{{customerId}}\",\r\n    \"country\": \"{{addressCountry}}-Updated\",\r\n    \"city\": \"{{addressCity}}-Updated\",\r\n    \"street\": \"{{addressStreet}}-Updated\",\r\n    \"current\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/addresses/{{addressId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"addresses",
+								"{{addressId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r06-PatchAddress",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerId\": \"{{customerId}}\",\r\n    \"city\": \"{{addressCity}}-Patched\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/addresses/{{addressId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"addresses",
+								"{{addressId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r07-DeleteAddress",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/addresses/{{addressId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"addresses",
+								"{{addressId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "f05-Documents",
+			"item": [
+				{
+					"name": "r01-CreateDocument",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Document id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    pm.collectionVariables.set(\"documentId\", jsonData.id);\r",
+									"    pm.collectionVariables.set(\"documentTitle\", jsonData.title);\r",
+									"    pm.collectionVariables.set(\"documentContent\", jsonData.content);\r",
+									"    pm.collectionVariables.set(\"documentActive\", jsonData.active);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerId\": \"{{customerId}}\",\r\n    \"title\": \"{{$randomLoremSentence}}\",\r\n    \"content\": \"{{$randomLoremParagraph}}\",\r\n    \"active\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/documents",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"documents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r02-GetDocumentByIdAsAdmin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Address id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    \r",
+									"    pm.expect(jsonData.id).to.be.equal(pm.collectionVariables.get(\"addressId\"));\r",
+									"    pm.expect(jsonData.country).to.be.equal(pm.collectionVariables.get(\"addressCountry\"));\r",
+									"    pm.expect(jsonData.city).to.be.equal(pm.collectionVariables.get(\"addressCity\"));    \r",
+									"    pm.expect(jsonData.street).to.be.equal(pm.collectionVariables.get(\"addressStreet\"));    \r",
+									"    pm.expect(jsonData.current).to.be.equal(pm.collectionVariables.get(\"addressCurrent\"));    \r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/documents/{{documentId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"documents",
+								"{{documentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r03-GetDocumentByIdAsUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Address id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    \r",
+									"    pm.expect(jsonData.id).to.be.equal(pm.collectionVariables.get(\"addressId\"));\r",
+									"    pm.expect(jsonData.country).to.be.equal(pm.collectionVariables.get(\"addressCountry\"));\r",
+									"    pm.expect(jsonData.city).to.be.equal(pm.collectionVariables.get(\"addressCity\"));    \r",
+									"    pm.expect(jsonData.street).to.be.equal(pm.collectionVariables.get(\"addressStreet\"));    \r",
+									"    pm.expect(jsonData.current).to.be.equal(pm.collectionVariables.get(\"addressCurrent\"));    \r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/documents/{{documentId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"documents",
+								"{{documentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r04-GetAllDocuments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/documents",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"documents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r05-UpdateDocument",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerId\": \"{{customerId}}\",\r\n    \"title\": \"{{documentTitle}}-Updated\",\r\n    \"content\": \"{{documentContent}}-Updated\",\r\n    \"active\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/documents/{{documentId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"documents",
+								"{{documentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r06-PatchDocument",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerId\": \"{{customerId}}\",\r\n    \"title\": \"{{documentTitle}}-Patched\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DataApiUrl}}/documents/{{documentId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"documents",
+								"{{documentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r07-DeleteDocument",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{DataApiUrl}}/documents/{{documentId}}",
+							"host": [
+								"{{DataApiUrl}}"
+							],
+							"path": [
+								"documents",
+								"{{documentId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "f06-Files",
+			"item": [
+				{
+					"name": "r01-Upload",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{FileApiUrl}}/storage/{{documentId}}",
+							"host": [
+								"{{FileApiUrl}}"
+							],
+							"path": [
+								"storage",
+								"{{documentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r02-Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{FileApiUrl}}/storage/{{documentId}}",
+							"host": [
+								"{{FileApiUrl}}"
+							],
+							"path": [
+								"storage",
+								"{{documentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r03-Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{FileApiUrl}}/storage/{{documentId}}",
+							"host": [
+								"{{FileApiUrl}}"
+							],
+							"path": [
+								"storage",
+								"{{documentId}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -1174,6 +2254,14 @@
 		},
 		{
 			"key": "documentActive",
+			"value": ""
+		},
+		{
+			"key": "FileApiUrl",
+			"value": ""
+		},
+		{
+			"key": "antiforgeryToken",
 			"value": ""
 		}
 	]

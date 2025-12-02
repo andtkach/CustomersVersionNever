@@ -16,7 +16,7 @@ AppContext.SetSwitch("Azure.Experimental.EnableActivitySource", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.AddServiceDefaults();
+builder.AddServiceDefaults();
 
 builder.Services.AddCors(options =>
 {
@@ -59,7 +59,6 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
-// Blob Storage configuration: prefer configured connection string, then environment, then Azurite development settings
 var storageConnection = builder.Configuration["AzureStorage:ConnectionString"]
                         ?? builder.Configuration["ConnectionStrings:AzureStorage"]
                         ?? Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
@@ -79,8 +78,6 @@ if (!string.IsNullOrWhiteSpace(storageConnection))
 }
 else if (builder.Environment.IsDevelopment())
 {
-    // For local development use explicit Azurite settings from configuration or environment variables.
-    // This avoids embedding a hard-coded connection string in source control.
     var azuriteBlobEndpoint = builder.Configuration["Azurite:BlobEndpoint"] ?? "http://127.0.0.1:10000/devstoreaccount1";
     var azuriteAccountName = builder.Configuration["Azurite:AccountName"] ?? "devstoreaccount1";
     var azuriteAccountKey = builder.Configuration["Azurite:AccountKey"] ?? Environment.GetEnvironmentVariable("AZURITE_ACCOUNT_KEY");
@@ -103,8 +100,8 @@ else
 }
 
 builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
+builder.Services.AddScoped<UserHelper>();
 
-// Register health checks and blob storage health check
 builder.Services.AddHealthChecks()
     .AddCheck<BlobStorageHealthCheck>("blob_storage");
 
