@@ -77,8 +77,6 @@ Console.WriteLine($"Created {worker}", worker);
 Console.WriteLine($"Created {api}", api);
 Console.WriteLine($"Created {storage}", storage);
 
-// Start compose-managed containers (customers-ui + azurite) if available.
-// Failures are logged but do not stop the composition.
 TryEnsureComposeServicesRunning();
 
 await builder.Build().RunAsync();
