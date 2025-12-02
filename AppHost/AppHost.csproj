@@ -19,5 +19,6 @@
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Worker\Worker.csproj" />
     <ProjectReference Include="..\Auth\Auth.csproj" />
+    <ProjectReference Include="..\Storage\Storage.csproj" />
   </ItemGroup>
 </Project>

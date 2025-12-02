@@ -65,9 +65,17 @@ var api = builder.AddProject<Projects.Api>("Api")
     .WaitFor(cacheDatabase)
     .WaitFor(authDatabase);
 
+var storage = builder.AddProject<Projects.Storage>("Storage")
+    .WithHttpsEndpoint(20053, name: "public")
+    .WithReference(api)
+    .WithReference(worker)
+    .WaitFor(api)
+    .WaitFor(worker);
+
 Console.WriteLine($"Created {auth}", auth);
 Console.WriteLine($"Created {worker}", worker);
 Console.WriteLine($"Created {api}", api);
+Console.WriteLine($"Created {storage}", storage);
 
 // Start compose-managed containers (customers-ui + azurite) if available.
 // Failures are logged but do not stop the composition.

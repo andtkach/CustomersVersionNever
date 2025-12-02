@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36705.20 d17.14
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{39AE0D3F-2177-88F2-3A7D-0C2ABC431B83}"
 EndProject
@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{02EA681E-C7D
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth", "Auth\Auth.csproj", "{334F3B23-EFE8-6F1A-5E5F-9A2275D56E28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage", "Storage\Storage.csproj", "{F98EC679-CB87-C239-C078-E161C2C5B92A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{334F3B23-EFE8-6F1A-5E5F-9A2275D56E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{334F3B23-EFE8-6F1A-5E5F-9A2275D56E28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{334F3B23-EFE8-6F1A-5E5F-9A2275D56E28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F98EC679-CB87-C239-C078-E161C2C5B92A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F98EC679-CB87-C239-C078-E161C2C5B92A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F98EC679-CB87-C239-C078-E161C2C5B92A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F98EC679-CB87-C239-C078-E161C2C5B92A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
