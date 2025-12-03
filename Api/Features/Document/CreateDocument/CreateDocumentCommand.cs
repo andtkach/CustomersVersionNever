@@ -3,7 +3,7 @@ using Common.Requests.Document;
 
 namespace Api.Features.Document.CreateDocument;
 
-public sealed class CreateDocumentCommand(Guid documentId, Guid customerId, Guid institutionId, string title, string content, bool active)
+public sealed class CreateDocumentCommand(Guid documentId, Guid customerId, string title, string content, bool active)
     : IBaseCommand<DocumentCreatePayload>
 {
     public string Action => "Create";

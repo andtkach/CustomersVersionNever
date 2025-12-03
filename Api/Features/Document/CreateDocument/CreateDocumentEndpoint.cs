@@ -27,7 +27,7 @@ namespace Api.Features.Document.CreateDocument
             [FromServices] IDocumentCacheService cacheService)
         {
             var documentId = Guid.CreateVersion7();
-            var command = new CreateDocumentCommand(documentId, request.CustomerId, request.InstitutionId, request.Title, request.Content, request.Active);
+            var command = new CreateDocumentCommand(documentId, request.CustomerId, request.Title, request.Content, request.Active);
             var response = new Response(documentId, request.CustomerId, request.Title, request.Content, request.Active);
             var company = userHelper.GetUserCompany();
 
