@@ -51,14 +51,16 @@ internal sealed class DocumentProcessor(
         using var scope = scopeFactory.CreateScope();
 
         logger.LogInformation("Document mutation {MutationIntentId}", mutation.IntentId);
-
+        var messageId = args.Message.MessageId;
+        
         var mutationHandler = scope.ServiceProvider.GetRequiredService<IDocumentMutationHandler>();
         var result = await mutationHandler.HandleAsync(
             new DocumentMutationRequest(mutation.IntentId, mutation.Action),
             scope.ServiceProvider.GetRequiredService<FrontendDataContext>(),
             scope.ServiceProvider.GetRequiredService<BackendDataContext>(),
             scope.ServiceProvider.GetRequiredService<HybridCache>(),
-            scope.ServiceProvider.GetRequiredService<ILogger<Program>>());
+            scope.ServiceProvider.GetRequiredService<ILogger<Program>>(),
+            messageId);
 
         if (result)
         {

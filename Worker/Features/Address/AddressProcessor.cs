@@ -51,14 +51,16 @@ internal sealed class AddressProcessor(
         using var scope = scopeFactory.CreateScope();
 
         logger.LogInformation("Address mutation {MutationIntentId}", mutation.IntentId);
-
+        var messageId = args.Message.MessageId;
+        
         var mutationHandler = scope.ServiceProvider.GetRequiredService<IAddressMutationHandler>();
         var result = await mutationHandler.HandleAsync(
             new AddressMutationRequest(mutation.IntentId, mutation.Action),
             scope.ServiceProvider.GetRequiredService<FrontendDataContext>(),
             scope.ServiceProvider.GetRequiredService<BackendDataContext>(),
             scope.ServiceProvider.GetRequiredService<HybridCache>(),
-            scope.ServiceProvider.GetRequiredService<ILogger<Program>>());
+            scope.ServiceProvider.GetRequiredService<ILogger<Program>>(),
+            messageId);
 
         if (result)
         {

@@ -52,6 +52,7 @@ internal sealed class InstitutionProcessor(
         using var scope = scopeFactory.CreateScope();
 
         logger.LogInformation("Institution mutation {MutationIntentId}", mutation.IntentId);
+        var messageId = args.Message.MessageId;
 
         var mutationHandler = scope.ServiceProvider.GetRequiredService<IInstitutionMutationHandler>();
         var result = await mutationHandler.HandleAsync(
@@ -59,7 +60,8 @@ internal sealed class InstitutionProcessor(
             scope.ServiceProvider.GetRequiredService<FrontendDataContext>(),
             scope.ServiceProvider.GetRequiredService<BackendDataContext>(),
             scope.ServiceProvider.GetRequiredService<HybridCache>(),
-            scope.ServiceProvider.GetRequiredService<ILogger<Program>>());
+            scope.ServiceProvider.GetRequiredService<ILogger<Program>>(),
+            messageId);
 
         if (result)
         {

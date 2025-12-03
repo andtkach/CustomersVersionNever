@@ -43,7 +43,7 @@ export async function fetcher<T = unknown>(
 
   try {
     // Add 1 second delay before making the request
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise(resolve => setTimeout(resolve, 100))
 
     const response = await fetch(url, {
       ...restOptions,

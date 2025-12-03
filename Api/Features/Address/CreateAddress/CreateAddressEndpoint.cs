@@ -1,5 +1,6 @@
 ﻿using Api.Abstractions;
 using Api.Data;
+using Api.Features.Address.Services;
 using Azure.Messaging.ServiceBus;
 using Common.Authorization;
 using Common.Requests.Address;
@@ -20,13 +21,15 @@ namespace Api.Features.Address.CreateAddress
             ServiceBusClient serviceBusClient,
             IHttpClientFactory httpClientFactory,
             ILogger<Program> logger,
-            [FromServices] UserHelper userHelper)
+            [FromServices] UserHelper userHelper,
+            [FromServices] IAddressCacheService cacheService)
         {
             var addressId = Guid.CreateVersion7();
             var command = new CreateAddressCommand(addressId, request.CustomerId, request.Country, request.City, request.Street, request.Current);
             var response = new Response(addressId, request.CustomerId, request.Country, request.City, request.Street, request.Current);
             var company = userHelper.GetUserCompany();
-            
+
+            await cacheService.Invalidate(addressId);
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,

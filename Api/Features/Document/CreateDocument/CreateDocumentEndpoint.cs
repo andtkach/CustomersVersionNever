@@ -1,9 +1,12 @@
 ﻿using Api.Abstractions;
 using Api.Data;
+using Api.Features.Address.Services;
+using Api.Features.Document.Services;
 using Azure.Messaging.ServiceBus;
 using Common.Authorization;
 using Common.Requests.Document;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Amqp.Framing;
 
 namespace Api.Features.Document.CreateDocument
 {
@@ -20,13 +23,15 @@ namespace Api.Features.Document.CreateDocument
             ServiceBusClient serviceBusClient,
             IHttpClientFactory httpClientFactory,
             ILogger<Program> logger,
-            [FromServices] UserHelper userHelper)
+            [FromServices] UserHelper userHelper,
+            [FromServices] IDocumentCacheService cacheService)
         {
             var documentId = Guid.CreateVersion7();
             var command = new CreateDocumentCommand(documentId, request.CustomerId, request.InstitutionId, request.Title, request.Content, request.Active);
             var response = new Response(documentId, request.CustomerId, request.Title, request.Content, request.Active);
             var company = userHelper.GetUserCompany();
-            
+
+            await cacheService.Invalidate(documentId);
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,

@@ -47,7 +47,13 @@ public sealed class BaseCommandHandler<TCommand, TPayload>
 
             await using var sender = serviceBusClient.CreateSender(queueName);
             var mutation = new EntityMutation(intent.Id, company, intent.Action);
-            await sender.SendMessageAsync(new ServiceBusMessage(JsonSerializer.Serialize(mutation)));
+
+            var message = new ServiceBusMessage(JsonSerializer.Serialize(mutation))
+            {
+                MessageId = Guid.CreateVersion7().ToString()
+            };
+            
+            await sender.SendMessageAsync(message);
 
             return onSuccess();
         }

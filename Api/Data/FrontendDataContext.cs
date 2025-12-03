@@ -6,6 +6,7 @@ namespace Api.Data;
 public class FrontendDataContext(DbContextOptions<FrontendDataContext> options) : DbContext(options)
 {
     public DbSet<Intent> Intents { get; set; }
+    public DbSet<Consumer> Consumers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,8 +21,17 @@ public class FrontendDataContext(DbContextOptions<FrontendDataContext> options) 
             entity.Property(e => e.CreatedAtUtc).IsRequired();
             entity.Property(e => e.UpdatedAtUtc).IsRequired(false);
 
-            // Add index on Company to improve query performance when filtering by company
             entity.HasIndex(e => e.Company).HasDatabaseName("IX_Intents_Company");
+        });
+
+        modelBuilder.Entity<Consumer>(entity =>
+        {
+            entity.HasKey(e => new { e.MessageId, e.ConsumerName });
+
+            entity.Property(e => e.MessageId).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.ConsumerName).HasMaxLength(100).IsRequired();
+
+            entity.HasIndex(e => new { e.MessageId, e.ConsumerName }).IsUnique();
         });
     }
 }

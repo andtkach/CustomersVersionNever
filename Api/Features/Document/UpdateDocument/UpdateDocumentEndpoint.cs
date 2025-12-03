@@ -1,5 +1,6 @@
 ﻿using Api.Abstractions;
 using Api.Data;
+using Api.Features.Document.Services;
 using Azure.Messaging.ServiceBus;
 using Common.Authorization;
 using Common.Requests.Document;
@@ -20,11 +21,13 @@ namespace Api.Features.Document.UpdateDocument
             ServiceBusClient serviceBusClient,
             IHttpClientFactory httpClientFactory,
             ILogger<Program> logger,
-            [FromServices] UserHelper userHelper)
+            [FromServices] UserHelper userHelper,
+            [FromServices] IDocumentCacheService cacheService)
         {
             var command = new UpdateDocumentCommand(documentId, request.CustomerId, request.InstitutionId, request.Title, request.Content, request.Active);
             var company = userHelper.GetUserCompany();
-            
+
+            await cacheService.Invalidate(documentId);
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,
