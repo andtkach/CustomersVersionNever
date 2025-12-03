@@ -2,16 +2,17 @@ import { useParams, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { useEffect } from "react"
-import { ArrowLeft } from "lucide-react"
+import { useEffect, useState } from "react"
+import { ArrowLeft, Upload, Download, X, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/components/ui/toast"
-import { useDocument, useUpdateDocument } from "../hooks"
+import { useDocument, useUpdateDocument, useUploadDocument, useDocumentFileExists } from "../hooks"
 import { useCustomers } from "@/features/customers/hooks"
+import { storageApi } from "../api"
 
 const documentSchema = z.object({
   customerId: z.string().min(1, "Customer is required"),
@@ -26,9 +27,13 @@ export function DocumentEditPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { toast } = useToast()
-  const { data: document, isLoading } = useDocument(id!)
+  const { data: documentData, isLoading } = useDocument(id!)
   const updateMutation = useUpdateDocument()
+  const uploadMutation = useUploadDocument()
   const { data: customersData } = useCustomers()
+  const { data: fileExists, refetch: refetchFileExists } = useDocumentFileExists(id!)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const {
     register,
@@ -40,15 +45,15 @@ export function DocumentEditPage() {
   })
 
   useEffect(() => {
-    if (document) {
+    if (documentData) {
       reset({
-        customerId: document.customerId,
-        title: document.title,
-        content: document.content,
-        isActive: document.isActive,
+        customerId: documentData.customerId,
+        title: documentData.title,
+        content: documentData.content,
+        isActive: documentData.isActive,
       })
     }
-  }, [document, reset])
+  }, [documentData, reset])
 
   const onSubmit = async (data: DocumentFormData) => {
     try {
@@ -67,11 +72,102 @@ export function DocumentEditPage() {
     }
   }
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0])
+    }
+  }
+
+  const handleFileUpload = async () => {
+    if (!selectedFile) return
+
+    try {
+      await uploadMutation.mutateAsync({ documentId: id!, file: selectedFile })
+      toast({
+        title: "Success",
+        description: "File uploaded successfully",
+      })
+      setSelectedFile(null)
+      refetchFileExists()
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to upload file",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleDownload = async () => {
+    try {
+      const response = await storageApi.download(id!)
+      if (!response) {
+        toast({
+          title: "Error",
+          description: "File not found",
+          variant: "destructive",
+        })
+        return
+      }
+
+      const blob = await response.blob()
+      const contentDisposition = response.headers.get("content-disposition")
+      let filename = `document-${id}`
+
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
+        if (filenameMatch && filenameMatch[1]) {
+          filename = filenameMatch[1].replace(/['"]/g, "")
+        }
+      }
+
+      const url = window.URL.createObjectURL(blob)
+      const a = window.document.createElement("a")
+      a.href = url
+      a.download = filename
+      window.document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      window.document.body.removeChild(a)
+
+      toast({
+        title: "Success",
+        description: "File downloaded successfully",
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to download file",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleDeleteFile = async () => {
+    setIsDeleting(true)
+    try {
+      await storageApi.delete(id!)
+      toast({
+        title: "Success",
+        description: "File deleted successfully",
+      })
+      refetchFileExists()
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete file",
+        variant: "destructive",
+      })
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
   if (isLoading) {
     return <div>Loading...</div>
   }
 
-  if (!document) {
+  if (!documentData) {
     return <div>Document not found</div>
   }
 
@@ -86,7 +182,7 @@ export function DocumentEditPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Edit {document.title}</CardTitle>
+          <CardTitle>Edit {documentData.title}</CardTitle>
           <CardDescription>Update document information</CardDescription>
         </CardHeader>
         <CardContent>
@@ -151,6 +247,75 @@ export function DocumentEditPage() {
               </Button>
             </div>
           </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Document File</CardTitle>
+          <CardDescription>Upload or download document file</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {fileExists && (
+            <div className="flex items-center justify-between p-3 bg-muted rounded-md">
+              <div className="flex items-center gap-2">
+                <div className="text-sm font-medium">File attached</div>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={handleDownload}>
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleDeleteFile}
+                  disabled={isDeleting}
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  {isDeleting ? "Deleting..." : "Delete"}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label htmlFor="file">Upload New File</Label>
+            <div className="flex gap-2">
+              <Input
+                id="file"
+                type="file"
+                onChange={handleFileChange}
+                className="flex-1"
+              />
+              {selectedFile && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSelectedFile(null)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+            {selectedFile && (
+              <div className="text-sm text-muted-foreground">
+                Selected: {selectedFile.name} ({(selectedFile.size / 1024).toFixed(2)} KB)
+              </div>
+            )}
+          </div>
+
+          {selectedFile && (
+            <Button
+              type="button"
+              onClick={handleFileUpload}
+              disabled={uploadMutation.isPending}
+            >
+              <Upload className="mr-2 h-4 w-4" />
+              {uploadMutation.isPending ? "Uploading..." : "Upload File"}
+            </Button>
+          )}
         </CardContent>
       </Card>
     </div>
