@@ -2140,7 +2140,286 @@
 		},
 		{
 			"name": "f07-Gateway",
-			"item": []
+			"item": [
+				{
+					"name": "r01-LoginAdmin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Body contains token\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"pm.test(\"Token is not empty\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.not.be.empty;",
+									"",
+									"    pm.collectionVariables.set(\"adminId\", jsonData.id);",
+									"    pm.collectionVariables.set(\"adminToken\", jsonData.token);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"email\": \"admin@email.com\",\r\n\t\"password\": \"Admin123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{GatewayApiUrl}}/auth/login",
+							"host": [
+								"{{GatewayApiUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r02-LoginUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Body contains token\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"token\");",
+									"});",
+									"pm.test(\"Id is not empty\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.not.be.empty;",
+									"    pm.expect(jsonData.token).to.not.be.empty;",
+									"",
+									"    pm.collectionVariables.set(\"userId\", jsonData.id);    ",
+									"    pm.collectionVariables.set(\"userToken\", jsonData.token);    ",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"email\": \"{{userEmail}}\",\r\n\t\"password\": \"Secret123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{GatewayApiUrl}}/auth/login",
+							"host": [
+								"{{GatewayApiUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r03-CreateInstitution",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"});\r",
+									"pm.test(\"Institution id is not empty\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.not.be.empty;\r",
+									"    pm.collectionVariables.set(\"institutionId\", jsonData.id);\r",
+									"    pm.collectionVariables.set(\"institutionName\", jsonData.name);\r",
+									"    pm.collectionVariables.set(\"institutionDescription\", jsonData.description);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{$randomWord}}\",\r\n    \"description\": \"{{$randomWords}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{GatewayApiUrl}}/data/institutions",
+							"host": [
+								"{{GatewayApiUrl}}"
+							],
+							"path": [
+								"data",
+								"institutions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r04-GetAllInstitutionsAsAdmin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Body contains institutions\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"institutions\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{GatewayApiUrl}}/data/institutions",
+							"host": [
+								"{{GatewayApiUrl}}"
+							],
+							"path": [
+								"data",
+								"institutions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r05-GetFile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{GatewayApiUrl}}/files/storage/{{documentId}}",
+							"host": [
+								"{{GatewayApiUrl}}"
+							],
+							"path": [
+								"files",
+								"storage",
+								"{{documentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "r06-GetAll",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{GatewayApiUrl}}/all",
+							"host": [
+								"{{GatewayApiUrl}}"
+							],
+							"path": [
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
