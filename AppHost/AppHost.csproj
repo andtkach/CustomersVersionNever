@@ -20,5 +20,6 @@
     <ProjectReference Include="..\Worker\Worker.csproj" />
     <ProjectReference Include="..\Auth\Auth.csproj" />
     <ProjectReference Include="..\Storage\Storage.csproj" />
+    <ProjectReference Include="..\Gateway\Gateway.csproj" />
   </ItemGroup>
 </Project>

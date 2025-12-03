@@ -10,7 +10,7 @@
 			"name": "f01-Auth",
 			"item": [
 				{
-					"name": "r01-LoginAsAdmin",
+					"name": "r01-LoginAdmin",
 					"event": [
 						{
 							"listen": "test",
@@ -586,7 +586,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{userToken}}",
+									"value": "{{adminToken}}",
 									"type": "string"
 								}
 							]
@@ -2063,7 +2063,7 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Andrii/OneDrive/Pictures/20250317.jpg"
 								}
 							]
 						},
@@ -2137,6 +2137,10 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "f07-Gateway",
+			"item": []
 		}
 	],
 	"event": [
@@ -2262,6 +2266,10 @@
 		},
 		{
 			"key": "antiforgeryToken",
+			"value": ""
+		},
+		{
+			"key": "GatewayApiUrl",
 			"value": ""
 		}
 	]

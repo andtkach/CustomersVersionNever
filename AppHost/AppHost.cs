@@ -72,10 +72,23 @@ var storage = builder.AddProject<Projects.Storage>("Storage")
     .WaitFor(api)
     .WaitFor(worker);
 
+var gateway = builder.AddProject<Projects.Gateway>("Gateway")
+    .WithHttpsEndpoint(20063, name: "public")
+    .WithReference(api)
+    .WithReference(worker)
+    .WithReference(storage)
+    .WithReference(auth)
+    .WaitFor(api)
+    .WaitFor(worker)
+    .WaitFor(storage)
+    .WaitFor(auth);
+
+
 Console.WriteLine($"Created {auth}", auth);
 Console.WriteLine($"Created {worker}", worker);
 Console.WriteLine($"Created {api}", api);
 Console.WriteLine($"Created {storage}", storage);
+Console.WriteLine($"Created {gateway}", gateway);
 
 TryEnsureComposeServicesRunning();
 

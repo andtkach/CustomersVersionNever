@@ -7,9 +7,12 @@ services:
       - "20043:80"
     environment:
       - NODE_ENV=development
-      - VITE_DATA_API_URL=${VITE_DATA_API_URL:-https://localhost:20011}
-      - VITE_AUTH_API_URL=${VITE_AUTH_API_URL:-https://localhost:20031}
-      - VITE_STORAGE_API_URL=${VITE_STORAGE_API_URL:-https://localhost:20051}
+      - VITE_DATA_API_URL=${VITE_DATA_API_URL:-https://localhost:20061/data}
+      - VITE_AUTH_API_URL=${VITE_AUTH_API_URL:-https://localhost:20061/auth}
+      - VITE_STORAGE_API_URL=${VITE_STORAGE_API_URL:-https://localhost:20061/files}
+      # - VITE_DATA_API_URL=${VITE_DATA_API_URL:-https://localhost:20011}
+      # - VITE_AUTH_API_URL=${VITE_AUTH_API_URL:-https://localhost:20031}
+      # - VITE_STORAGE_API_URL=${VITE_STORAGE_API_URL:-https://localhost:20051}
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
