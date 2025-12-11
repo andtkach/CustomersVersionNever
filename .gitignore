@@ -421,3 +421,6 @@ FodyWeavers.xsd
 .github\instructions\snyk_rules.instructions.md
 
 AppHost/azurite-data/
+
+#idea
+.idea

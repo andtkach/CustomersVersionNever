@@ -14,6 +14,7 @@ internal static class GetInstitutionsEndpoint
         [FromQuery] bool? includeCustomers,
         ILogger<Program> logger)
     {
+        logger.LogInformation("Request GetInstitutionsAsync with {includeCustomers}", includeCustomers);
         try
         {
             if (includeCustomers is true)
