@@ -1,6 +1,5 @@
 using Common.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ServiceDefaults;
 using System.Security.Claims;
@@ -9,8 +8,6 @@ using Storage.Features;
 using Azure.Storage;
 using Azure.Storage.Blobs;
 using Storage.Health;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 AppContext.SetSwitch("Azure.Experimental.EnableActivitySource", true);
 
