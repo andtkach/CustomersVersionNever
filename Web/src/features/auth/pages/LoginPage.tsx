@@ -54,7 +54,7 @@ export function LoginPage() {
           <CardDescription>Enter your credentials to access the application</CardDescription>          
         </CardHeader>
         <CardContent>
-          <div>( admin@email.com | Admin123! )</div>
+          <div><p>( admin@email.com | Admin123! )</p></div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
