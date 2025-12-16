@@ -58,7 +58,12 @@ public sealed class CustomerCacheService : ICustomerCacheService
         await _cache.RemoveAsync($"{CustomerCacheKeyPrefix}{id}{_userHelper.GetCompanyForCache()}");
         await _cache.RemoveAsync($"{CustomerListCacheKey}{_userHelper.GetCompanyForCache()}");
     }
-    
+
+    public async Task PutNewCustomer(CustomerDto customerDto)
+    {
+        await _cache.SetAsync($"{CustomerCacheKeyPrefix}{customerDto.Id}{_userHelper.GetCompanyForCache()}", customerDto);
+    }
+
     private async Task<CustomerDto?> GetCustomerFromWorkerAsync(Guid id)
     {
         try

@@ -7,4 +7,5 @@ public interface ICustomerCacheService
     Task<CustomerDto?> GetCustomerAsync(Guid id);
     Task<IEnumerable<CustomerDto>> GetCustomersAsync();
     Task Invalidate(Guid id);
+    Task PutNewCustomer(CustomerDto customerDto);
 }

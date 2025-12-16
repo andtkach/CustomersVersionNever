@@ -7,4 +7,5 @@ public interface IAddressCacheService
     Task<AddressDto?> GetAddressAsync(Guid id);
     Task<IEnumerable<AddressDto>> GetAddressesAsync();
     Task Invalidate(Guid id);
+    Task PutNewAddress(AddressDto addressDto);
 }

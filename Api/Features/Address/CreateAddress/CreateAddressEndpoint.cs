@@ -3,6 +3,7 @@ using Api.Data;
 using Api.Features.Address.Services;
 using Azure.Messaging.ServiceBus;
 using Common.Authorization;
+using Common.Dto;
 using Common.Requests.Address;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,7 @@ namespace Api.Features.Address.CreateAddress
             var company = userHelper.GetUserCompany();
 
             await cacheService.Invalidate(addressId);
+            await cacheService.PutNewAddress(new AddressDto(addressId, request.CustomerId, request.Country, request.City, request.Street, request.Current));
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,

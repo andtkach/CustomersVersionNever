@@ -9,4 +9,5 @@ public interface IInstitutionCacheService
     Task<InstitutionWithCustomersDto?> GetInstitutionWithCustomersAsync(Guid id);
     Task<IEnumerable<InstitutionWithCustomersDto>> GetInstitutionsWithCustomersAsync();
     Task Invalidate(Guid id);
+    Task PutNewInstitution(InstitutionWithCustomersDto institutionWithCustomersDto);
 }

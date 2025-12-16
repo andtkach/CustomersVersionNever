@@ -83,4 +83,15 @@ app.MapInstitutionsEndpoints();
 app.MapCustomersEndpoints();
 app.MapDocumentsEndpoints();
 app.MapAddressesEndpoints();
+
+app.MapPost("/reset", (BackendDataContext context) =>
+{
+    // Reset the database by deleting all data from relevant tables
+    context.Addresses.RemoveRange(context.Addresses);
+    context.Documents.RemoveRange(context.Documents);
+    context.Customers.RemoveRange(context.Customers);
+    context.Institutions.RemoveRange(context.Institutions);
+    return context.SaveChangesAsync();
+});
+
 await app.RunAsync();

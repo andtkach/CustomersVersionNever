@@ -3,8 +3,10 @@ using Api.Data;
 using Api.Features.Customer.Services;
 using Azure.Messaging.ServiceBus;
 using Common.Authorization;
+using Common.Dto;
 using Common.Requests.Customer;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata;
 
 namespace Api.Features.Customer.CreateCustomer
 {
@@ -30,6 +32,7 @@ namespace Api.Features.Customer.CreateCustomer
             var company = userHelper.GetUserCompany();
 
             await cacheService.Invalidate(customerId);
+            await cacheService.PutNewCustomer(new CustomerDto(customerId, request.InstitutionId, request.FirstName, request.LastName));
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,

@@ -7,4 +7,5 @@ public interface IDocumentCacheService
     Task<DocumentDto?> GetDocumentAsync(Guid id);
     Task<IEnumerable<DocumentDto>> GetDocumentsAsync();
     Task Invalidate(Guid id);
+    Task PutNewDocument(DocumentDto documentDto);
 }

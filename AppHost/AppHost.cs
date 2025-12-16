@@ -35,8 +35,9 @@ var authDatabase = database.AddDatabase(aspireAuthDatabase);
 
 var auth = builder.AddProject<Projects.Auth>("Auth")
     .WithHttpsEndpoint(20033, name: "public")
-    .WithReference(authDatabase)
-    .WaitFor(authDatabase);
+    .WithReference(authDatabase)    
+    .WaitFor(authDatabase)
+    .WithExternalHttpEndpoints();
 
 
 var worker = builder.AddProject<Projects.Worker>("Worker")
@@ -50,7 +51,12 @@ var worker = builder.AddProject<Projects.Worker>("Worker")
     .WaitFor(serviceBus)
     .WaitFor(cacheDatabase)
     .WaitFor(frontendDatabase)
-    .WaitFor(authDatabase);
+    .WaitFor(authDatabase)
+    .WithExternalHttpEndpoints()
+    .WithHttpCommand("/reset", "Reset database", commandOptions: new()
+    {
+        IconName = "Delete",
+    });
 
 var api = builder.AddProject<Projects.Api>("Api")
     .WithHttpsEndpoint(20013, name: "public")
@@ -63,14 +69,25 @@ var api = builder.AddProject<Projects.Api>("Api")
     .WaitFor(serviceBus)
     .WaitFor(worker)
     .WaitFor(cacheDatabase)
-    .WaitFor(authDatabase);
+    .WaitFor(authDatabase)
+    .WithExternalHttpEndpoints()
+    .WithCommand("say-hello", "Say Hello!", context =>
+        {
+            Console.WriteLine("Hello!");
+            return Task.FromResult(new ExecuteCommandResult() { Success = true });
+        },
+        commandOptions: new CommandOptions()
+        {
+            IconName = "EmojiSmileSlight"
+        });
 
 var storage = builder.AddProject<Projects.Storage>("Storage")
     .WithHttpsEndpoint(20053, name: "public")
     .WithReference(api)
     .WithReference(worker)
     .WaitFor(api)
-    .WaitFor(worker);
+    .WaitFor(worker)
+    .WithExternalHttpEndpoints();
 
 var gateway = builder.AddProject<Projects.Gateway>("Gateway")
     .WithHttpsEndpoint(20063, name: "public")

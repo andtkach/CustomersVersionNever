@@ -59,6 +59,11 @@ public sealed class AddressCacheService : IAddressCacheService
         await _cache.RemoveAsync($"{AddressListCacheKey}{_userHelper.GetCompanyForCache()}");
     }
 
+    public async Task PutNewAddress(AddressDto addressDto)
+    {
+        await _cache.SetAsync($"{AddressCacheKeyPrefix}{addressDto.Id}{_userHelper.GetCompanyForCache()}", addressDto);
+    }
+
     private async Task<AddressDto?> GetAddressFromWorkerAsync(Guid id)
     {
         try

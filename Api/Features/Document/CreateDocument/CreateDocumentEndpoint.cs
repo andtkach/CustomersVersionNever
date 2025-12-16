@@ -4,6 +4,7 @@ using Api.Features.Address.Services;
 using Api.Features.Document.Services;
 using Azure.Messaging.ServiceBus;
 using Common.Authorization;
+using Common.Dto;
 using Common.Requests.Document;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Amqp.Framing;
@@ -32,6 +33,7 @@ namespace Api.Features.Document.CreateDocument
             var company = userHelper.GetUserCompany();
 
             await cacheService.Invalidate(documentId);
+            await cacheService.PutNewDocument(new DocumentDto(documentId, request.CustomerId, request.Title, request.Content, request.Active));
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,

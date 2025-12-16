@@ -26,6 +26,8 @@ public class CreateInstitutionOperation(IInstitutionCacheService cacheService) :
             Company = intent.Company
         };
 
+        //await Task.Delay(TimeSpan.FromSeconds(20));
+
         await backendDataContext.Institutions.AddAsync(newInstitution);
         await cacheService.CacheInstitutionAsync(newInstitution, intent.Company);
         await cacheService.ClearInstitutionListsAsync(intent.Company);

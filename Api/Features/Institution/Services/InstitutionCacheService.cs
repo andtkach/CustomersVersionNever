@@ -88,6 +88,12 @@ public sealed class InstitutionCacheService : IInstitutionCacheService
         await _cache.RemoveAsync($"{InstitutionListWithCustomersCacheKey}{_userHelper.GetCompanyForCache()}");
     }
 
+    public async Task PutNewInstitution(InstitutionWithCustomersDto institutionWithCustomersDto)
+    {
+        await _cache.SetAsync($"{InstitutionCacheKeyPrefix}{institutionWithCustomersDto.Id}{_userHelper.GetCompanyForCache()}", institutionWithCustomersDto);
+        await _cache.SetAsync($"{InstitutionWithCustomersCacheKeyPrefix}{institutionWithCustomersDto.Id}{_userHelper.GetCompanyForCache()}", institutionWithCustomersDto);
+    }
+
     private async Task<InstitutionDto?> GetInstitutionFromWorkerAsync(Guid id)
     {
         try

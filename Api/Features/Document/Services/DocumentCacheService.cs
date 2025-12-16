@@ -59,6 +59,11 @@ public sealed class DocumentCacheService : IDocumentCacheService
         await _cache.RemoveAsync($"{DocumentListCacheKey}{_userHelper.GetCompanyForCache()}");
     }
 
+    public async Task PutNewDocument(DocumentDto documentDto)
+    {
+        await _cache.SetAsync($"{DocumentCacheKeyPrefix}{documentDto.Id}{_userHelper.GetCompanyForCache()}", documentDto);
+    }
+
     private async Task<DocumentDto?> GetDocumentFromWorkerAsync(Guid id)
     {
         try

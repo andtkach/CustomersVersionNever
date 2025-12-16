@@ -3,6 +3,7 @@ using Api.Data;
 using Api.Features.Institution.Services;
 using Azure.Messaging.ServiceBus;
 using Common.Authorization;
+using Common.Dto;
 using Common.Requests.Institution;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -31,6 +32,8 @@ namespace Api.Features.Institution.CreateInstitution
             var company = userHelper.GetUserCompany();
 
             await cacheService.Invalidate(institutionId);
+            await cacheService.PutNewInstitution(new InstitutionWithCustomersDto(institutionId, request.Name, request.Description, new List<InstitutionCustomerDto>()));
+                
             return await Handler.ExecuteAsync(
                 command,
                 dbContext,
