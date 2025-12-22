@@ -6,8 +6,11 @@ on:
       - main  
 
 jobs:
-  build:
+  build-and-deploy-acr:
     runs-on: ubuntu-latest
+
+    outputs:
+      short_sha: ${{ steps.vars.outputs.short_sha }}
 
     steps:
     - name: Checkout code
@@ -46,3 +49,13 @@ jobs:
           docker build -f Gateway/Gateway.Dockerfile -t $ACR_REGISTRY/custne-gateway:$IMAGE_TAG -t $ACR_REGISTRY/custne-gateway:latest .
           docker push $ACR_REGISTRY/custne-gateway --all-tags
       
+  deploy-to-azure-acs:
+    needs: build-and-deploy-acr
+    runs-on: ubuntu-latest
+
+    steps: 
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
