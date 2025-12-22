@@ -59,3 +59,19 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
+    - name: Deploy to ACR
+      uses: azure/container-apps-deploy-action@v1
+      env:
+          IMAGE_TAG: ${{ needs.build-and-deploy-acr.outputs.short_sha }}
+          ACR_SERVER: ${{ secrets.ACR_SERVER }}
+          #PASSWORD: ${{ secrets.DB_CONN }}
+      with:
+        registryUrl: ${{ secrets.ACR_SERVER }}
+        imageToDeploy: $ACR_SERVER/custne-gateway:$IMAGE_TAG
+        targetPort: 8080
+        ingress: external
+        containerAppName: api-gateway
+        containerAppEnvironment: appenv-custne-dev-njrwo7
+        resourceGroup: rg-custne-app
+        environmentVariables: |
+          ASPNETCORE_ENVIRONMENT=Development ASPNETCORE_URLS=http://+:8080 ConnectionStrings__DefaultConnectionMsSql=$PASSWORD
