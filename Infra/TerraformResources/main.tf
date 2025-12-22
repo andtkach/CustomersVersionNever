@@ -15,6 +15,64 @@ resource "azurerm_resource_group" "main" {
   tags     = var.tags
 }
 
+# Azure Container Registry
+resource "azurerm_container_registry" "acr" {
+  location = azurerm_resource_group.main.location
+  name = "acr${var.project_name}${var.environment}${random_string.suffix.result}"
+  resource_group_name = azurerm_resource_group.main.name
+  sku = "Standard"
+  admin_enabled = true
+  public_network_access_enabled = true
+  tags = var.tags
+}
+
+# Azure Work Analytics Workspace
+resource "azurerm_log_analytics_workspace" "law" {
+  name                = "law-${var.project_name}-${var.environment}-${random_string.suffix.result}"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30  
+}
+
+# Azure Container App Environment
+resource "azurerm_container_app_environment" "appenv" {
+  name                = "appenv-${var.project_name}-${var.environment}-${random_string.suffix.result}"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
+  tags = var.tags
+}
+
+# Azure Container Apps
+resource "azurerm_container_app" "app1" {
+  container_app_environment_id = azurerm_container_app_environment.appenv.id
+  name = "app1"
+  resource_group_name = azurerm_resource_group.main.name
+  revision_mode = "Multiple"
+  template {
+    min_replicas = 1
+    max_replicas = 3
+    container {
+      name   = "app1-container-${var.project_name}-${var.environment}-${random_string.suffix.result}"
+      cpu = 0.25
+      image = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+      memory = "0.5Gi"
+    }
+  }
+  ingress {
+    allow_insecure_connections = false
+    external_enabled = true
+    target_port = 8080
+    traffic_weight {
+      percentage = 100
+      label = "primary"
+      latest_revision = true
+    }
+  }
+  tags = var.tags
+}  
+
 # Azure SQL Server
 resource "azurerm_mssql_server" "main" {
   name                         = "sql-${var.project_name}-${var.environment}-${random_string.suffix.result}"

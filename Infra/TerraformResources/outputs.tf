@@ -9,6 +9,56 @@ output "resource_group_location" {
   value       = azurerm_resource_group.main.location
 }
 
+# ACR Outputs
+output "acr_name" {
+  description = "Name of the Azure Container Registry"
+  value       = azurerm_container_registry.acr.name
+}
+
+output "acr_login_server" {
+  description = "Login server URL of the Azure Container Registry"
+  value       = azurerm_container_registry.acr.login_server
+}
+
+output "acr_admin_username" {
+  description = "Admin username of the Azure Container Registry"
+  value       = azurerm_container_registry.acr.admin_username
+  sensitive   = true
+}
+
+output "acr_admin_password" {
+  description = "Admin password of the Azure Container Registry"
+  value       = azurerm_container_registry.acr.admin_password
+  sensitive   = true
+}
+
+output "acr_id" {
+  description = "ID of the Azure Container Registry"
+  value       = azurerm_container_registry.acr.id
+}
+
+# Log Analytics Workspace Outputs
+output "log_analytics_workspace_name" {
+  description = "Name of the Log Analytics Workspace"
+  value       = azurerm_log_analytics_workspace.law.name
+}
+
+output "log_analytics_workspace_id" {
+  description = "ID of the Log Analytics Workspace"
+  value       = azurerm_log_analytics_workspace.law.id
+}
+
+output "log_analytics_workspace_workspace_id" {
+  description = "Workspace ID of the Log Analytics Workspace"
+  value       = azurerm_log_analytics_workspace.law.workspace_id
+}
+
+output "log_analytics_workspace_primary_shared_key" {
+  description = "Primary shared key of the Log Analytics Workspace"
+  value       = azurerm_log_analytics_workspace.law.primary_shared_key
+  sensitive   = true
+}
+
 # SQL Server Outputs
 output "sql_server_name" {
   description = "Name of the SQL Server"
@@ -78,6 +128,9 @@ output "deployment_summary" {
   description = "Summary of deployed resources"
   value = {
     resource_group     = azurerm_resource_group.main.name
+    acr_name           = azurerm_container_registry.acr.name
+    acr_login_server   = azurerm_container_registry.acr.login_server
+    log_analytics      = azurerm_log_analytics_workspace.law.name
     sql_server         = azurerm_mssql_server.main.name
     databases          = [for db in azurerm_mssql_database.databases : db.name]
     key_vault          = azurerm_key_vault.main.name
