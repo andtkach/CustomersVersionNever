@@ -47,7 +47,7 @@ resource "azurerm_container_app_environment" "appenv" {
 # Azure Container Apps - Gateway
 resource "azurerm_container_app" "apigateway" {
   container_app_environment_id = azurerm_container_app_environment.appenv.id
-  name                         = "api-gateway"
+  name                         = "api-gateway-${var.project_name}-${var.environment}"
   resource_group_name          = azurerm_resource_group.main.name
   revision_mode                = "Multiple"
   template {
@@ -76,7 +76,7 @@ resource "azurerm_container_app" "apigateway" {
 # Azure Container Apps - Web
 resource "azurerm_container_app" "web" {
   container_app_environment_id = azurerm_container_app_environment.appenv.id
-  name                         = "web"
+  name                         = "web-${var.project_name}-${var.environment}"
   resource_group_name          = azurerm_resource_group.main.name
   revision_mode                = "Multiple"
   template {

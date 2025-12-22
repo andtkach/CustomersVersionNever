@@ -37,9 +37,11 @@ jobs:
         calculatedSha=$(git rev-parse --short ${{ github.sha }})
         echo "::set-output name=short_sha::$calculatedSha"
 
+    # Restore
     - name: Restore dependencies
       run: dotnet restore Customers.sln
 
+    # Build
     - name: Build solution
       run: dotnet build Customers.sln --no-restore --configuration Release
 
@@ -48,8 +50,8 @@ jobs:
         ACR_REGISTRY: ${{ secrets.ACR_SERVER }}
         IMAGE_TAG: ${{ steps.vars.outputs.short_sha }}
       run: |
-          docker build -f Web/Dockerfile -t $ACR_REGISTRY/custne-web:$IMAGE_TAG -t $ACR_REGISTRY/custne-gateway:latest .
-          docker push $ACR_REGISTRY/custne-web --all-tags
+          docker build -f Gateway/Gateway.Dockerfile -t $ACR_REGISTRY/custne-gateway:$IMAGE_TAG -t $ACR_REGISTRY/custne-gateway:latest .
+          docker push $ACR_REGISTRY/custne-gateway --all-tags
       
   deploy-app-from-container:
     needs: build-and-deploy-container
@@ -69,10 +71,10 @@ jobs:
           PASSWORD: ${{ secrets.DB_CONN }}
       with:
         registryUrl: ${{ secrets.ACR_SERVER }}
-        imageToDeploy: $ACR_SERVER/custne-web:$IMAGE_TAG
+        imageToDeploy: $ACR_SERVER/custne-gateway:$IMAGE_TAG
         targetPort: 8080
         ingress: external
-        containerAppName: web
+        containerAppName: gateway
         containerAppEnvironment: appenv-custne-dev-njrwo7
         resourceGroup: rg-custne-app
         environmentVariables: |
