@@ -37,5 +37,5 @@ terraform.rc
 *.bak
 
 # Ignore environment files
-.env
-.env.*
+#.env
+#.env.*
