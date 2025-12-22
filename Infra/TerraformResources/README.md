@@ -259,3 +259,4 @@ az ad sp create-for-rbac --name github-auth --role contributor --scopes /subscri
 
 
 
+
