@@ -74,7 +74,7 @@ jobs:
         imageToDeploy: $ACR_SERVER/custne-gateway:$IMAGE_TAG
         targetPort: 8080
         ingress: external
-        containerAppName: gateway
+        containerAppName: custne-gateway
         containerAppEnvironment: appenv-custne-dev
         resourceGroup: rg-custne-app
         environmentVariables: |
