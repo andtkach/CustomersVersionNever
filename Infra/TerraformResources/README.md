@@ -257,6 +257,11 @@ Verify:
 az ad sp create-for-rbac --name github-auth --role contributor --scopes /subscriptions/206e3290-051e-4353-964b-c224e47ffdc1/resourceGroups/rg-custne-app --json-auth --out json) 
 5. secrets.DB_CONN = "Server=tcp:sql-custne-dev-njrwo7.database.windows.net,1433;Initial Catalog=AuthDb;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;User=sqladmin;Password=ChangeMe123!Strong;"
 
-
+6. JWT_ISSUER - https://auth.customers.api
+7. JWT_AUDIENCE - customers.api
+8. JWT_SECRET_KEY - very-long-secret-key-will-be-replaced-on-production
+9. AUTH_SERVICE_URL - https://localhost:20031
+10. DATA_SERVICE_URL - https://localhost:20011
+11. STORAGE_SERVICE_URL - https://localhost:20051
 
 
