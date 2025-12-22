@@ -86,7 +86,7 @@ export function LoginPage() {
               {loginMutation.isPending ? "Logging in..." : "Login"}
             </Button>
           </form>
-          <div><p>( v: 1.0.1 )</p></div>
+          <div><p>( v: 1.0.2 )</p></div>
         </CardContent>
       </Card>
     </div>

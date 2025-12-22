@@ -70,7 +70,7 @@ jobs:
       with:
         registryUrl: ${{ secrets.ACR_SERVER }}
         imageToDeploy: ${{ secrets.ACR_SERVER }}/custne-web:${{ needs.build-and-deploy-container.outputs.short_sha }}
-        targetPort: 80
+        targetPort: 8080
         ingress: external
         containerAppName: web-custne-dev
         containerAppEnvironment: appenv-custne-dev
