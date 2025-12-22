@@ -73,7 +73,7 @@ jobs:
         targetPort: 80
         ingress: external
         containerAppName: web
-        containerAppEnvironment: appenv-custne-dev-njrwo7
+        containerAppEnvironment: appenv-custne-dev
         resourceGroup: rg-custne-app
         # environmentVariables: |
         #   ASPNETCORE_ENVIRONMENT=Development ASPNETCORE_URLS=http://+:8080 ConnectionStrings__DefaultConnectionMsSql=$PASSWORD
