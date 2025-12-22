@@ -6,6 +6,7 @@ on:
       - main  
     paths:
       - 'Web/**'
+  workflow_dispatch:
 
 jobs:
   build-and-deploy-container:
@@ -48,7 +49,7 @@ jobs:
         ACR_REGISTRY: ${{ secrets.ACR_SERVER }}
         IMAGE_TAG: ${{ steps.vars.outputs.short_sha }}
       run: |
-          docker build -f Web/Dockerfile -t $ACR_REGISTRY/custne-web:$IMAGE_TAG -t $ACR_REGISTRY/custne-web:latest .
+          docker build -f Web/Web.Dockerfile -t $ACR_REGISTRY/custne-web:$IMAGE_TAG -t $ACR_REGISTRY/custne-web:latest .
           docker push $ACR_REGISTRY/custne-web --all-tags
       
   deploy-app-from-container:
