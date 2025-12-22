@@ -71,7 +71,7 @@ jobs:
           PASSWORD: ${{ secrets.DB_CONN }}
       with:
         registryUrl: ${{ secrets.ACR_SERVER }}
-        imageToDeploy: $ACR_SERVER/custne-gateway:$IMAGE_TAG
+        imageToDeploy: ${{ secrets.ACR_SERVER }}/custne-gateway:${{ needs.build-and-deploy-container.outputs.short_sha }}
         targetPort: 8080
         ingress: external
         containerAppName: custne-gateway
