@@ -76,7 +76,7 @@ app.UseAuthorization();
 app.MapGet("/ping", (IWebHostEnvironment env) =>
 {
     var appName = env.ApplicationName;
-    var version = "1.0.0";
+    var version = "1.0.1";
 
     return Results.Ok(new { Service = appName, Version = version, Status = "Healthy" });
 });
