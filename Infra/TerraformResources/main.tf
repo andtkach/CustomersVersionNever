@@ -108,6 +108,13 @@ resource "azurerm_mssql_database" "databases" {
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   sku_name       = each.value.sku_name
   zone_redundant = false
+  license_type = "LicenseIncluded"
+  max_size_gb = 2
+  enclave_type = "Default"
+
+  lifecycle {
+    prevent_destroy = false
+  }
 
   tags = var.tags
 }
