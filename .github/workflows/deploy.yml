@@ -43,6 +43,6 @@ jobs:
         ACR_REGISTRY: ${{ secrets.ACR_SERVER }}
         IMAGE_TAG: ${{ steps.vars.outputs.short_sha }}
       run: |
-          docker build -f Gateway.Dockerfile -t $ACR_REGISTRY/custne-gateway:$IMAGE_TAG -t $ACR_REGISTRY/custne-gateway:latest .
+          docker build -f Gateway\Gateway.Dockerfile -t $ACR_REGISTRY/custne-gateway:$IMAGE_TAG -t $ACR_REGISTRY/custne-gateway:latest .
           docker push $ACR_REGISTRY/custne-gateway --all-tags
       
