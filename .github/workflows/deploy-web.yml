@@ -61,19 +61,17 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    - name: Deploy to ACR
+    - name: Deploy to Container App
       uses: azure/container-apps-deploy-action@v1
       env:
           IMAGE_TAG: ${{ needs.build-and-deploy-container.outputs.short_sha }}
           ACR_SERVER: ${{ secrets.ACR_SERVER }}
-          # PASSWORD: ${{ secrets.DB_CONN }}
       with:
         registryUrl: ${{ secrets.ACR_SERVER }}
-        imageToDeploy: $ACR_SERVER/custne-web:$IMAGE_TAG
+        imageToDeploy: ${{ secrets.ACR_SERVER }}/custne-web:${{ needs.build-and-deploy-container.outputs.short_sha }}
         targetPort: 80
         ingress: external
-        containerAppName: web
+        containerAppName: web-custne-dev
         containerAppEnvironment: appenv-custne-dev
         resourceGroup: rg-custne-app
-        # environmentVariables: |
-        #   ASPNETCORE_ENVIRONMENT=Development ASPNETCORE_URLS=http://+:8080 ConnectionStrings__DefaultConnectionMsSql=$PASSWORD
+        environmentVariables: VITE_API_BASE_URL=${{ secrets.API_GATEWAY_URL }}

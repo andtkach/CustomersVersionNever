@@ -264,4 +264,5 @@ az ad sp create-for-rbac --name github-auth --role contributor --scopes /subscri
 10. DATA_SERVICE_URL - https://localhost:20011
 11. STORAGE_SERVICE_URL - https://localhost:20051
 
+12. API_GATEWAY_URL = 
 
