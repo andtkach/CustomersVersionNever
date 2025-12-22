@@ -64,7 +64,7 @@ jobs:
       env:
           IMAGE_TAG: ${{ needs.build-and-deploy-acr.outputs.short_sha }}
           ACR_SERVER: ${{ secrets.ACR_SERVER }}
-          #PASSWORD: ${{ secrets.DB_CONN }}
+          PASSWORD: ${{ secrets.DB_CONN }}
       with:
         registryUrl: ${{ secrets.ACR_SERVER }}
         imageToDeploy: $ACR_SERVER/custne-gateway:$IMAGE_TAG
