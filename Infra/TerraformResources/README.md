@@ -253,7 +253,8 @@ Verify:
 1. secrets.ACR_LOGIN_SERVER = Azure container registry Login server (acrcustnedev.azurecr.io)
 2. secrets.ACR_USERNAME = Username (acrcustnedev)
 3. secrets.ACR_PASSWORD = password ()
-4. secrets.AZURE_CREDENTIALS (in cmd run: az ad sp create-for-rbac --name github-auth --role contributor --scopes /subscriptions/206e3290-051e-4353-964b-c224e47ffdc1/resourceGroups/rg-custne-app --json-auth --out json) 
+4. secrets.AZURE_CREDENTIALS (in cmd run: 
+az ad sp create-for-rbac --name github-auth --role contributor --scopes /subscriptions/206e3290-051e-4353-964b-c224e47ffdc1/resourceGroups/rg-custne-app --json-auth --out json) 
 5. secrets.DB_CONN = "Server=tcp:sql-custne-dev-njrwo7.database.windows.net,1433;Initial Catalog=AuthDb;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;User=sqladmin;Password=ChangeMe123!Strong;"
 
 

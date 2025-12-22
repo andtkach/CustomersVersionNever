@@ -63,7 +63,12 @@ builder.Services.AddScoped<UserHelper>();
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in non-container environments
+if (!app.Environment.IsDevelopment() && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CONTAINER_APP_NAME")))
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseCors("UiPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
