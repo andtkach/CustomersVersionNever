@@ -13,4 +13,4 @@ echo "Environment configuration generated:"
 cat /usr/share/nginx/html/env-config.js
 
 # Start nginx
-exec nginx -g 'daemon off;'
+#exec nginx -g 'daemon off;'
