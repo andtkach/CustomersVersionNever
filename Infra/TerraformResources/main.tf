@@ -45,16 +45,16 @@ resource "azurerm_container_app_environment" "appenv" {
 }
 
 # Azure Container Apps
-resource "azurerm_container_app" "app1" {
+resource "azurerm_container_app" "apigateway" {
   container_app_environment_id = azurerm_container_app_environment.appenv.id
-  name = "app1"
+  name = "api-gateway"
   resource_group_name = azurerm_resource_group.main.name
   revision_mode = "Multiple"
   template {
     min_replicas = 1
     max_replicas = 3
     container {
-      name   = "app1-container-${var.project_name}-${var.environment}-${random_string.suffix.result}"
+      name   = "api-gateway-container-${var.project_name}-${var.environment}-${random_string.suffix.result}"
       cpu = 0.25
       image = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
       memory = "0.5Gi"

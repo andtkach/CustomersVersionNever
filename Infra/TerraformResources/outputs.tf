@@ -76,24 +76,24 @@ output "container_app_environment_default_domain" {
 }
 
 # Container App Outputs
-output "container_app1_name" {
-  description = "Name of the Container App (app1)"
-  value       = azurerm_container_app.app1.name
+output "container_apigateway_name" {
+  description = "Name of the Container App (api gateway)"
+  value       = azurerm_container_app.apigateway.name
 }
 
-output "container_app1_id" {
-  description = "ID of the Container App (app1)"
-  value       = azurerm_container_app.app1.id
+output "container_apigateway_id" {
+  description = "ID of the Container App (api gateway)"
+  value       = azurerm_container_app.apigateway.id
 }
 
-output "container_app1_fqdn" {
-  description = "FQDN of the Container App (app1)"
-  value       = azurerm_container_app.app1.latest_revision_fqdn
+output "container_apigateway_fqdn" {
+  description = "FQDN of the Container App (api gateway)"
+  value       = azurerm_container_app.apigateway.latest_revision_fqdn
 }
 
-output "container_app1_url" {
-  description = "URL of the Container App (app1)"
-  value       = "https://${azurerm_container_app.app1.latest_revision_fqdn}"
+output "container_apigateway_url" {
+  description = "URL of the Container App (api gateway)"
+  value       = "https://${azurerm_container_app.apigateway.latest_revision_fqdn}"
 }
 
 # SQL Server Outputs
@@ -169,7 +169,7 @@ output "deployment_summary" {
     acr_login_server       = azurerm_container_registry.acr.login_server
     log_analytics          = azurerm_log_analytics_workspace.law.name
     container_app_env      = azurerm_container_app_environment.appenv.name
-    container_app1_url     = "https://${azurerm_container_app.app1.latest_revision_fqdn}"
+    container_apigateway_url     = "https://${azurerm_container_app.apigateway.latest_revision_fqdn}"
     sql_server             = azurerm_mssql_server.main.name
     databases              = [for db in azurerm_mssql_database.databases : db.name]
     key_vault              = azurerm_key_vault.main.name

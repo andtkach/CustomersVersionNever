@@ -248,32 +248,10 @@ Verify:
 - State is locked during operations to prevent conflicts
 - Never edit state files manually
 
-## Next Steps
 
-After deployment:
+## Github
+1. secrets.ACR_LOGIN_SERVER = Azure container registry Login server ()
+2. secrets.ACR_USERNAME = Username ()
+3. secrets.ACR_PASSWORD = password ()
 
-1. **Configure Application**:
-   - Retrieve connection strings from Key Vault
-   - Update application configuration
 
-2. **Set Up Access**:
-   - Configure Azure AD authentication for SQL
-   - Set up managed identities for applications
-   - Grant Key Vault access to applications
-
-3. **Monitor Resources**:
-   - Enable diagnostic logging
-   - Set up Azure Monitor alerts
-   - Configure Application Insights
-
-4. **Backup Strategy**:
-   - Configure SQL database backups
-   - Set up blob storage lifecycle policies
-
-## Support
-
-For issues or questions:
-1. Check Terraform output for error messages
-2. Verify Azure portal for resource status
-3. Review Terraform state: `terraform show`
-4. Check Azure Activity Log for deployment errors

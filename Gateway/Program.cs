@@ -68,7 +68,6 @@ app.UseCors("UiPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.MapGet("/ping", (IWebHostEnvironment env) =>
 {
     var appName = env.ApplicationName;
@@ -82,7 +81,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.MapHealthChecks("/health");
 app.MapGatewayEndpoints();
 app.MapReverseProxy();
 

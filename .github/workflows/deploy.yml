@@ -1,0 +1,48 @@
+name: Build and deploy api
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      id: github
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Configure ACR
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_SERVER }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - name: SHA of the commit
+      id: vars
+      run: |
+        calculatedSha=$(git rev-parse --short ${{ github.sha }})
+        echo "::set-output name=short_sha::$calculatedSha"
+
+    - name: Restore dependencies
+      run: dotnet restore Customers.sln
+
+    - name: Build solution
+      run: dotnet build Customers.sln --no-restore --configuration Release
+
+    - name: Build and push Docker image to ACR
+      env:
+        ACR_REGISTRY: ${{ secrets.ACR_SERVER }}
+        IMAGE_TAG: ${{ steps.vars.outputs.short_sha }}
+      run: |
+          docker build -f Gateway.Dockerfile -t $ACR_REGISTRY/custne-gateway:$IMAGE_TAG -t $ACR_REGISTRY/custne-gateway:latest .
+          docker push $ACR_REGISTRY/custne-gateway --all-tags
+      
