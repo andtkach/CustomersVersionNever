@@ -74,7 +74,7 @@ jobs:
         imageToDeploy: ${{ secrets.ACR_SERVER }}/custne-gateway:${{ needs.build-and-deploy-container.outputs.short_sha }}
         targetPort: 8080
         ingress: external
-        containerAppName: custne-gateway
+        containerAppName: api-gateway-custne-dev
         containerAppEnvironment: appenv-custne-dev
         resourceGroup: rg-custne-app
         environmentVariables: >-
