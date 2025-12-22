@@ -17,65 +17,95 @@ resource "azurerm_resource_group" "main" {
 
 # Azure Container Registry
 resource "azurerm_container_registry" "acr" {
-  location = azurerm_resource_group.main.location
-  name = "acr${var.project_name}${var.environment}${random_string.suffix.result}"
-  resource_group_name = azurerm_resource_group.main.name
-  sku = "Standard"
-  admin_enabled = true
+  location                      = azurerm_resource_group.main.location
+  name                          = "acr${var.project_name}${var.environment}"
+  resource_group_name           = azurerm_resource_group.main.name
+  sku                           = "Standard"
+  admin_enabled                 = true
   public_network_access_enabled = true
-  tags = var.tags
+  tags                          = var.tags
 }
 
 # Azure Work Analytics Workspace
 resource "azurerm_log_analytics_workspace" "law" {
-  name                = "law-${var.project_name}-${var.environment}-${random_string.suffix.result}"
+  name                = "law-${var.project_name}-${var.environment}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   sku                 = "PerGB2018"
-  retention_in_days   = 30  
+  retention_in_days   = 30
 }
 
 # Azure Container App Environment
 resource "azurerm_container_app_environment" "appenv" {
-  name                = "appenv-${var.project_name}-${var.environment}-${random_string.suffix.result}"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  name                       = "appenv-${var.project_name}-${var.environment}"
+  location                   = azurerm_resource_group.main.location
+  resource_group_name        = azurerm_resource_group.main.name
   log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
-  tags = var.tags
+  tags                       = var.tags
 }
 
-# Azure Container Apps
+# Azure Container Apps - Gateway
 resource "azurerm_container_app" "apigateway" {
   container_app_environment_id = azurerm_container_app_environment.appenv.id
-  name = "api-gateway"
-  resource_group_name = azurerm_resource_group.main.name
-  revision_mode = "Multiple"
+  name                         = "api-gateway"
+  resource_group_name          = azurerm_resource_group.main.name
+  revision_mode                = "Multiple"
   template {
     min_replicas = 1
     max_replicas = 3
     container {
-      name   = "api-gateway-container-${var.project_name}-${var.environment}-${random_string.suffix.result}"
-      cpu = 0.25
-      image = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+      name   = "api-gateway-container-${var.project_name}-${var.environment}"
+      cpu    = 0.25
+      image  = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
       memory = "0.5Gi"
     }
   }
   ingress {
     allow_insecure_connections = false
-    external_enabled = true
-    target_port = 8080
+    external_enabled           = true
+    target_port                = 8080
     traffic_weight {
-      percentage = 100
-      label = "primary"
+      percentage      = 100
+      label           = "primary"
       latest_revision = true
     }
   }
   tags = var.tags
-}  
+}
+
+# Azure Container Apps - Web
+resource "azurerm_container_app" "web" {
+  container_app_environment_id = azurerm_container_app_environment.appenv.id
+  name                         = "web"
+  resource_group_name          = azurerm_resource_group.main.name
+  revision_mode                = "Multiple"
+  template {
+    min_replicas = 1
+    max_replicas = 3
+    container {
+      name   = "web-container-${var.project_name}-${var.environment}"
+      cpu    = 0.25
+      image  = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+      memory = "0.5Gi"
+    }
+  }
+  ingress {
+    allow_insecure_connections = false
+    external_enabled           = true
+    target_port                = 80
+    traffic_weight {
+      percentage      = 100
+      label           = "primary"
+      latest_revision = true
+    }
+  }
+  tags = var.tags
+}
+
 
 # Azure SQL Server
 resource "azurerm_mssql_server" "main" {
-  name                         = "sql-${var.project_name}-${var.environment}-${random_string.suffix.result}"
+  name                         = "sql-${var.project_name}-${var.environment}"
   resource_group_name          = azurerm_resource_group.main.name
   location                     = azurerm_resource_group.main.location
   version                      = "12.0"
@@ -108,9 +138,9 @@ resource "azurerm_mssql_database" "databases" {
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   sku_name       = each.value.sku_name
   zone_redundant = false
-  license_type = "LicenseIncluded"
-  max_size_gb = 2
-  enclave_type = "Default"
+  license_type   = "LicenseIncluded"
+  max_size_gb    = 2
+  enclave_type   = "Default"
 
   lifecycle {
     prevent_destroy = false
@@ -121,7 +151,7 @@ resource "azurerm_mssql_database" "databases" {
 
 # Key Vault
 resource "azurerm_key_vault" "main" {
-  name                       = "kv-${var.project_name}-${var.environment}-${random_string.suffix.result}"
+  name                       = "kv-${var.project_name}-${var.environment}"
   location                   = azurerm_resource_group.main.location
   resource_group_name        = azurerm_resource_group.main.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -197,7 +227,7 @@ resource "azurerm_key_vault_secret" "sql_admin_password" {
 
 # Service Bus Namespace
 resource "azurerm_servicebus_namespace" "main" {
-  name                = "sb-${var.project_name}-${var.environment}-${random_string.suffix.result}"
+  name                = "sb-${var.project_name}-${var.environment}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   sku                 = var.servicebus_sku
@@ -233,7 +263,7 @@ resource "azurerm_key_vault_secret" "servicebus_connection_string" {
 
 # Storage Account for files
 resource "azurerm_storage_account" "main" {
-  name                     = "st${var.project_name}${var.environment}${random_string.suffix.result}"
+  name                     = "st${var.project_name}${var.environment}"
   resource_group_name      = azurerm_resource_group.main.name
   location                 = azurerm_resource_group.main.location
   account_tier             = var.storage_account_tier

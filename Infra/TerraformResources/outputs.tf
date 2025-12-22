@@ -96,6 +96,27 @@ output "container_apigateway_url" {
   value       = "https://${azurerm_container_app.apigateway.latest_revision_fqdn}"
 }
 
+# Container App (web) Outputs
+output "container_web_name" {
+  description = "Name of the Container App (web)"
+  value       = azurerm_container_app.web.name
+}
+
+output "container_web_id" {
+  description = "ID of the Container App (web)"
+  value       = azurerm_container_app.web.id
+}
+
+output "container_web_fqdn" {
+  description = "FQDN of the Container App (web)"
+  value       = azurerm_container_app.web.latest_revision_fqdn
+}
+
+output "container_web_url" {
+  description = "URL of the Container App (web)"
+  value       = "https://${azurerm_container_app.web.latest_revision_fqdn}"
+}
+
 # SQL Server Outputs
 output "sql_server_name" {
   description = "Name of the SQL Server"
@@ -164,18 +185,19 @@ output "storage_container_names" {
 output "deployment_summary" {
   description = "Summary of deployed resources"
   value = {
-    resource_group         = azurerm_resource_group.main.name
-    acr_name               = azurerm_container_registry.acr.name
-    acr_login_server       = azurerm_container_registry.acr.login_server
-    log_analytics          = azurerm_log_analytics_workspace.law.name
-    container_app_env      = azurerm_container_app_environment.appenv.name
-    container_apigateway_url     = "https://${azurerm_container_app.apigateway.latest_revision_fqdn}"
-    sql_server             = azurerm_mssql_server.main.name
-    databases              = [for db in azurerm_mssql_database.databases : db.name]
-    key_vault              = azurerm_key_vault.main.name
-    service_bus            = azurerm_servicebus_namespace.main.name
-    service_bus_queues     = [for queue in azurerm_servicebus_queue.queues : queue.name]
-    storage_account        = azurerm_storage_account.main.name
-    storage_containers     = [for container in azurerm_storage_container.containers : container.name]
+    resource_group           = azurerm_resource_group.main.name
+    acr_name                 = azurerm_container_registry.acr.name
+    acr_login_server         = azurerm_container_registry.acr.login_server
+    log_analytics            = azurerm_log_analytics_workspace.law.name
+    container_app_env        = azurerm_container_app_environment.appenv.name
+    container_apigateway_url = "https://${azurerm_container_app.apigateway.latest_revision_fqdn}"
+    container_web_url        = "https://${azurerm_container_app.web.latest_revision_fqdn}"
+    sql_server               = azurerm_mssql_server.main.name
+    databases                = [for db in azurerm_mssql_database.databases : db.name]
+    key_vault                = azurerm_key_vault.main.name
+    service_bus              = azurerm_servicebus_namespace.main.name
+    service_bus_queues       = [for queue in azurerm_servicebus_queue.queues : queue.name]
+    storage_account          = azurerm_storage_account.main.name
+    storage_containers       = [for container in azurerm_storage_container.containers : container.name]
   }
 }

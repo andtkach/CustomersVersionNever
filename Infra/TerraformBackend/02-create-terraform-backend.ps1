@@ -3,7 +3,7 @@
 
 param(
     [string]$ResourceGroupName = "rg-custne-tf",
-    [string]$StorageAccountName = "tfstate$(Get-Random -Minimum 1000 -Maximum 9999)custne",
+    [string]$StorageAccountName = "tfstatecustne",
     [string]$ContainerName = "tfstate",
     [string]$Location = "spaincentral",
     [string]$Sku = "Standard_LRS"
