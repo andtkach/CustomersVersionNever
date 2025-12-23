@@ -51,12 +51,13 @@ export function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Login</CardTitle>
-          <CardDescription>Enter your credentials to access the application</CardDescription>          
+          {/* <CardDescription>Enter your credentials to access the application</CardDescription>           */}
+          <CardDescription>Try: <span className="font-medium">admin@email.com</span> / <span className="font-medium">Admin123!</span></CardDescription>          
         </CardHeader>
         <CardContent>
-          <div className="text-sm text-muted-foreground mb-2">
+          {/* <div className="text-sm text-muted-foreground mb-2">
             <p>Try: <span className="font-medium">admin@email.com</span> / <span className="font-medium">Admin123!</span></p>
-          </div>
+          </div> */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
