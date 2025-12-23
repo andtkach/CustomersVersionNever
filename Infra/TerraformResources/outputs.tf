@@ -96,6 +96,27 @@ output "container_apigateway_url" {
   value       = "https://${azurerm_container_app.apigateway.latest_revision_fqdn}"
 }
 
+# Container App (auth) Outputs
+output "container_apiauth_name" {
+  description = "Name of the Container App (api auth)"
+  value       = azurerm_container_app.apiauth.name
+}
+
+output "container_apiauth_id" {
+  description = "ID of the Container App (api auth)"
+  value       = azurerm_container_app.apiauth.id
+}
+
+output "container_apiauth_fqdn" {
+  description = "FQDN of the Container App (api auth)"
+  value       = azurerm_container_app.apiauth.latest_revision_fqdn
+}
+
+output "container_apiauth_url" {
+  description = "URL of the Container App (api auth)"
+  value       = "https://${azurerm_container_app.apiauth.latest_revision_fqdn}"
+}
+
 # Container App (web) Outputs
 output "container_web_name" {
   description = "Name of the Container App (web)"
@@ -191,6 +212,7 @@ output "deployment_summary" {
     log_analytics            = azurerm_log_analytics_workspace.law.name
     container_app_env        = azurerm_container_app_environment.appenv.name
     container_apigateway_url = "https://${azurerm_container_app.apigateway.latest_revision_fqdn}"
+    container_apiauth_url    = "https://${azurerm_container_app.apiauth.latest_revision_fqdn}"
     container_web_url        = "https://${azurerm_container_app.web.latest_revision_fqdn}"
     sql_server               = azurerm_mssql_server.main.name
     databases                = [for db in azurerm_mssql_database.databases : db.name]

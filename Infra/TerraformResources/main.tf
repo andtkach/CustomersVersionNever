@@ -59,7 +59,7 @@ resource "azurerm_container_app" "apigateway" {
       image  = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
       memory = "0.5Gi"
     }
-  }
+  }  
   ingress {
     allow_insecure_connections = false
     external_enabled           = true
@@ -88,7 +88,7 @@ resource "azurerm_container_app" "apiauth" {
       image  = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
       memory = "0.5Gi"
     }
-  }
+  }  
   ingress {
     allow_insecure_connections = false
     external_enabled           = true
