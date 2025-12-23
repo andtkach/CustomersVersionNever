@@ -267,3 +267,17 @@ az ad sp create-for-rbac --name github-auth --role contributor --scopes /subscri
 12. API_GATEWAY_URL = https://api-gateway-custne-dev.kindmeadow-6f303938.northeurope.azurecontainerapps.io
 
 13. DB_CONN_AUTH = "Server=tcp:sql-custne-dev.database.windows.net,1433;Initial Catalog=AuthDb;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;User=sqladmin;Password=ChangeMe123!Strong;"
+
+
+14 For Infra deploy
+secrets.ARM_CLIENT_ID - appid
+secrets.ARM_CLIENT_SECRET - password
+secrets.ARM_SUBSCRIPTION_ID - from azure
+secrets.ARM_TENANT_ID - tennant
+
+run command:
+az ad sp create-for-rbac --name devaccess
+
+Provide access if failed on storage backend operation
+az role assignment create --assignee GUID-FROM-ERROR --role Contributor --scope /subscriptions/206e3290-051e-4353-964b-c224e47ffdc1
+
