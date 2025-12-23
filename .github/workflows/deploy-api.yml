@@ -1,0 +1,81 @@
+name: Build and deploy Api
+
+on:
+  push:
+    branches:
+      - main  
+    paths:
+      - 'Api/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy-container:
+    runs-on: ubuntu-latest
+
+    outputs:
+      short_sha: ${{ steps.vars.outputs.short_sha }}
+
+    steps:
+    - name: Checkout code
+      id: github
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Configure ACR
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_SERVER }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - name: SHA of the commit
+      id: vars
+      run: |
+        calculatedSha=$(git rev-parse --short ${{ github.sha }})
+        echo "::set-output name=short_sha::$calculatedSha"
+
+    # Restore
+    - name: Restore dependencies
+      run: dotnet restore Customers.sln
+
+    # Build
+    - name: Build solution
+      run: dotnet build Customers.sln --no-restore --configuration Release
+
+    - name: Build and push Docker image to ACR
+      env:
+        ACR_REGISTRY: ${{ secrets.ACR_SERVER }}
+        IMAGE_TAG: ${{ steps.vars.outputs.short_sha }}
+      run: |
+          docker build -f Api/Api.Dockerfile -t $ACR_REGISTRY/custne-api:$IMAGE_TAG -t $ACR_REGISTRY/custne-api:latest .
+          docker push $ACR_REGISTRY/custne-api --all-tags
+      
+  deploy-app-from-container:
+    needs: build-and-deploy-container
+    runs-on: ubuntu-latest
+
+    steps: 
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Deploy to ACR
+      uses: azure/container-apps-deploy-action@v1
+      env:
+          IMAGE_TAG: ${{ needs.build-and-deploy-container.outputs.short_sha }}
+          ACR_SERVER: ${{ secrets.ACR_SERVER }}
+          PASSWORD: ${{ secrets.DB_CONN }}
+      with:
+        registryUrl: ${{ secrets.ACR_SERVER }}
+        imageToDeploy: ${{ secrets.ACR_SERVER }}/custne-api:${{ needs.build-and-deploy-container.outputs.short_sha }}
+        targetPort: 8080
+        ingress: external
+        containerAppName: api-api-custne-dev
+        containerAppEnvironment: appenv-custne-dev
+        resourceGroup: rg-custne-app
+        environmentVariables: ASPNETCORE_ENVIRONMENT=Development ASPNETCORE_URLS=http://+:8080 ASPNETCORE_FORWARDEDHEADERS_ENABLED=true Jwt__Issuer=${{ secrets.JWT_ISSUER }} Jwt__Audience=${{ secrets.JWT_AUDIENCE }} Jwt__SecretKey=${{ secrets.JWT_SECRET_KEY }} Jwt__ExpirationInMinutes=60 ReverseProxy__Clusters__auth-cluster__Destinations__destination1__Address=${{ secrets.AUTH_SERVICE_URL }} ReverseProxy__Clusters__data-cluster__Destinations__destination1__Address=${{ secrets.DATA_SERVICE_URL }} ReverseProxy__Clusters__storage-cluster__Destinations__destination1__Address=${{ secrets.STORAGE_SERVICE_URL }}

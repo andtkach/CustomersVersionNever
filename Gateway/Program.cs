@@ -77,7 +77,6 @@ app.MapGet("/ping", (IWebHostEnvironment env) =>
 {
     var appName = env.ApplicationName;
     var version = "1.0.3";
-
     return Results.Ok(new { Service = appName, Version = version, Status = "Healthy" });
 });
 

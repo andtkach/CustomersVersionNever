@@ -138,6 +138,48 @@ output "container_web_url" {
   value       = "https://${azurerm_container_app.web.latest_revision_fqdn}"
 }
 
+# Container App (worker) Outputs
+output "container_apiworker_name" {
+  description = "Name of the Container App (api worker)"
+  value       = azurerm_container_app.apiworker.name
+}
+
+output "container_apiworker_id" {
+  description = "ID of the Container App (api worker)"
+  value       = azurerm_container_app.apiworker.id
+}
+
+output "container_apiworker_fqdn" {
+  description = "FQDN of the Container App (api worker)"
+  value       = azurerm_container_app.apiworker.latest_revision_fqdn
+}
+
+output "container_apiworker_url" {
+  description = "URL of the Container App (api worker)"
+  value       = "https://${azurerm_container_app.apiworker.latest_revision_fqdn}"
+}
+
+# Container App (api) Outputs
+output "container_apiaapi_name" {
+  description = "Name of the Container App (api api)"
+  value       = azurerm_container_app.apiaapi.name
+}
+
+output "container_apiaapi_id" {
+  description = "ID of the Container App (api api)"
+  value       = azurerm_container_app.apiaapi.id
+}
+
+output "container_apiaapi_fqdn" {
+  description = "FQDN of the Container App (api api)"
+  value       = azurerm_container_app.apiaapi.latest_revision_fqdn
+}
+
+output "container_apiaapi_url" {
+  description = "URL of the Container App (api api)"
+  value       = "https://${azurerm_container_app.apiaapi.latest_revision_fqdn}"
+}
+
 # SQL Server Outputs
 output "sql_server_name" {
   description = "Name of the SQL Server"
@@ -213,6 +255,8 @@ output "deployment_summary" {
     container_app_env        = azurerm_container_app_environment.appenv.name
     container_apigateway_url = "https://${azurerm_container_app.apigateway.latest_revision_fqdn}"
     container_apiauth_url    = "https://${azurerm_container_app.apiauth.latest_revision_fqdn}"
+    container_apiworker_url  = "https://${azurerm_container_app.apiworker.latest_revision_fqdn}"
+    container_apiaapi_url    = "https://${azurerm_container_app.apiaapi.latest_revision_fqdn}"
     container_web_url        = "https://${azurerm_container_app.web.latest_revision_fqdn}"
     sql_server               = azurerm_mssql_server.main.name
     databases                = [for db in azurerm_mssql_database.databases : db.name]

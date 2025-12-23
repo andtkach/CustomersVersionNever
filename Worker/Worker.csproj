@@ -3,6 +3,8 @@
 	<TargetFramework>net10.0</TargetFramework>
 	<Nullable>enable</Nullable>
 	<ImplicitUsings>enable</ImplicitUsings>
+	<UserSecretsId>5f71b8b4-a6eb-4ed1-9706-e4024b553329</UserSecretsId>
+	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   <ItemGroup>
 	  <PackageReference Include="Microsoft.Data.SqlClient" />
@@ -16,6 +18,7 @@
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
 	<PackageReference Include="Microsoft.Extensions.Caching.Hybrid" />
+	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />
