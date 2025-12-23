@@ -136,13 +136,13 @@ app.MapGet("/ping", (IWebHostEnvironment env) =>
 
 app.MapDefaultEndpoints();
 
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.MapOpenApi();
     await app.ApplyMigrations();
     await app.SeedRolesAndPermissions();
     await app.SeedAdminUser();
-}
+//}
 
 app.UseHttpsRedirection();
 app.UseCors("UiPolicy");
