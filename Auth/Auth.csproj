@@ -3,6 +3,8 @@
 	<TargetFramework>net10.0</TargetFramework>
 	<Nullable>enable</Nullable>
 	<ImplicitUsings>enable</ImplicitUsings>
+	<UserSecretsId>12afc2a3-d9da-454b-b799-80252d1e11e7</UserSecretsId>
+	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   
   <ItemGroup>
@@ -23,6 +25,7 @@
 	</PackageReference>
 	<PackageReference Include="Microsoft.Extensions.Caching.Hybrid" />
 	<PackageReference Include="Microsoft.Extensions.Caching.SqlServer" />
+	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
   </ItemGroup>
   <ItemGroup>
 	<ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />

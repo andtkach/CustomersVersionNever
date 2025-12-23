@@ -73,6 +73,35 @@ resource "azurerm_container_app" "apigateway" {
   tags = var.tags
 }
 
+# Azure Container Apps - Auth
+resource "azurerm_container_app" "apiauth" {
+  container_app_environment_id = azurerm_container_app_environment.appenv.id
+  name                         = "api-auth-${var.project_name}-${var.environment}"
+  resource_group_name          = azurerm_resource_group.main.name
+  revision_mode                = "Multiple"
+  template {
+    min_replicas = 1
+    max_replicas = 3
+    container {
+      name   = "api-auth-container-${var.project_name}-${var.environment}"
+      cpu    = 0.25
+      image  = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+      memory = "0.5Gi"
+    }
+  }
+  ingress {
+    allow_insecure_connections = false
+    external_enabled           = true
+    target_port                = 8080
+    traffic_weight {
+      percentage      = 100
+      label           = "primary"
+      latest_revision = true
+    }
+  }
+  tags = var.tags
+}
+
 # Azure Container Apps - Web
 resource "azurerm_container_app" "web" {
   container_app_environment_id = azurerm_container_app_environment.appenv.id
@@ -92,7 +121,7 @@ resource "azurerm_container_app" "web" {
   ingress {
     allow_insecure_connections = false
     external_enabled           = true
-    target_port                = 80
+    target_port                = 8080
     traffic_weight {
       percentage      = 100
       label           = "primary"

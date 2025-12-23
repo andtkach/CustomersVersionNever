@@ -127,6 +127,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.MapGet("/ping", (IWebHostEnvironment env) =>
+{
+    var appName = env.ApplicationName;
+    var version = "1.0.0";
+    return Results.Ok(new { Service = appName, Version = version, Status = "Healthy" });
+});
+
 app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
