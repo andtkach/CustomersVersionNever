@@ -75,4 +75,4 @@ jobs:
         containerAppName: web-custne-dev
         containerAppEnvironment: appenv-custne-dev
         resourceGroup: rg-custne-app
-        environmentVariables: VITE_API_BASE_URL=${{ secrets.API_GATEWAY_URL }}
+        environmentVariables: VITE_API_BASE_URL=${{ secrets.API_GATEWAY_URL }} VITE_DATA_API_URL=${{ secrets.DATA_SERVICE_URL }} VITE_AUTH_API_URL=${{ secrets.AUTH_SERVICE_URL }} VITE_STORAGE_API_URL=${{ secrets.STORAGE_SERVICE_URL }}
